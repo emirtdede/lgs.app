@@ -1,0 +1,20 @@
+{
+  "schemaVersion": 1,
+  "timezone": "Europe/Istanbul",
+  "auditDate": "2026-09-13",
+  "policy": "The workbook is immutable source evidence. These verified calendar-only overrides alter effective availability/schedule templates, never subject/topic order or mastery.",
+  "overrides": [
+    {
+      "date": "2027-05-17",
+      "availability": "full_day",
+      "reason": "Kurban Bayramı 2. günü; okul zaman kısıtı yok.",
+      "source": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=159"
+    },
+    {
+      "date": "2027-05-18",
+      "availability": "full_day",
+      "reason": "Kurban Bayramı 3. günü; okul zaman kısıtı yok.",
+      "source": "https://vakithesaplama.diyanet.gov.tr/icerik.php?icerik=159"
+    }
+  ]
+}

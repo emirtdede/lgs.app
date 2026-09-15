@@ -1,0 +1,3 @@
+# Autonomous Execution Rule
+
+Operate continuously without asking preference questions already resolved by repository docs. If an implementation detail is unspecified, choose the simplest privacy-preserving, testable, reversible option that satisfies canonical decisions and record it. Only block for missing external secrets, paid irreversible action, or destructive production change. Use subagents for independent review, then fix findings. Do not stop after an audit report; remediation and rerun are part of the task. Do not deploy production or delete production data without explicit owner action.

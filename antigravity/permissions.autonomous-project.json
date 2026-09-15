@@ -1,0 +1,53 @@
+{
+  "toolPermission": "proceed-in-sandbox",
+  "artifactReviewPolicy": "always-proceed",
+  "enableTerminalSandbox": true,
+  "allowNonWorkspaceAccess": false,
+  "permissions": {
+    "allow": [
+      "read_url(antigravity.google)",
+      "read_url(google.com)",
+      "read_url(googleapis.com)",
+      "read_url(npmjs.org)",
+      "read_url(github.com)",
+      "read_url(githubusercontent.com)",
+      "read_url(nodejs.org)",
+      "read_url(pnpm.io)",
+      "read_url(nextjs.org)",
+      "read_url(react.dev)",
+      "read_url(typescriptlang.org)",
+      "read_url(tailwindcss.com)",
+      "read_url(vitest.dev)",
+      "read_url(playwright.dev)",
+      "read_url(azureedge.net)",
+      "read_url(jsdelivr.net)",
+      "read_url(supabase.com)",
+      "read_url(vercel.com)",
+      "read_url(cloudflare.com)",
+      "read_url(youtube.com)",
+      "read_url(youtu.be)",
+      "read_url(googlevideo.com)",
+      "read_url(meb.gov.tr)",
+      "read_url(eba.gov.tr)",
+      "read_url(diyanet.gov.tr)",
+      "execute_url(localhost)",
+      "execute_url(127.0.0.1)"
+    ],
+    "deny": [
+      "command(rm -rf)",
+      "command(rm -fr)",
+      "command(sudo)",
+      "command(git clean)",
+      "command(git reset --hard)",
+      "command(Remove-Item)",
+      "command(del)",
+      "command(rmdir)",
+      "command(format)",
+      "command(diskpart)",
+      "write_file(.git/)",
+      "read_file(~/.ssh)",
+      "write_file(~/.ssh)"
+    ],
+    "ask": []
+  }
+}

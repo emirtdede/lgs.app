@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LGS Plan Import Normalized Task",
+  "type": "object",
+  "required": [
+    "externalTaskId",
+    "taskGroupKey",
+    "date",
+    "taskType",
+    "title",
+    "required",
+    "countsTowardTopicCompletion",
+    "sortOrder",
+    "normalizations",
+    "source"
+  ],
+  "properties": {
+    "externalTaskId": { "type": "string", "minLength": 1 },
+    "taskGroupKey": { "type": "string", "minLength": 1 },
+    "date": { "type": "string", "format": "date" },
+    "plannedStart": { "type": ["string", "null"], "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+    "plannedEnd": { "type": ["string", "null"], "pattern": "^([01]\\d|2[0-3]):[0-5]\\d$" },
+    "subject": { "type": ["string", "null"] },
+    "topic": { "type": ["string", "null"] },
+    "taskType": {
+      "enum": [
+        "topic_video",
+        "topic_review",
+        "topic_questions",
+        "mixed_questions",
+        "meb_questions",
+        "daily_math_benchmark",
+        "daily_math_extra",
+        "daily_paragraph_benchmark",
+        "daily_paragraph_extra",
+        "mistake_review",
+        "weekly_review",
+        "progress_review",
+        "branch_mock",
+        "full_mock",
+        "mock_analysis",
+        "reading",
+        "break",
+        "meal",
+        "sleep_prep"
+      ]
+    },
+    "title": { "type": "string", "minLength": 1 },
+    "resourceSourceKey": { "type": ["string", "null"] },
+    "resourceLabel": { "type": ["string", "null"] },
+    "resourceUrl": { "type": ["string", "null"], "format": "uri" },
+    "resourceItemExternalKey": { "type": ["string", "null"] },
+    "resourceItemUrl": { "type": ["string", "null"], "format": "uri" },
+    "allowedTopics": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "plannedQuestionCount": { "type": ["integer", "null"], "minimum": 0 },
+    "required": { "type": "boolean" },
+    "countsTowardTopicCompletion": { "type": "boolean" },
+    "sortOrder": { "type": "integer", "minimum": 0 },
+    "normalizations": {
+      "type": "array",
+      "items": {
+        "enum": [
+          "N-001",
+          "N-002",
+          "N-003",
+          "N-004",
+          "N-005",
+          "N-006",
+          "N-007",
+          "N-008",
+          "N-009",
+          "N-010",
+          "N-011"
+        ]
+      },
+      "uniqueItems": true
+    },
+    "source": {
+      "type": "object",
+      "required": ["sheet", "row", "rowHash", "rawTaskId", "rawTaskType"],
+      "properties": {
+        "sheet": { "type": "string", "minLength": 1 },
+        "row": { "type": "integer", "minimum": 2 },
+        "rowHash": { "type": "string", "pattern": "^[a-f0-9]{64}$" },
+        "rawTaskId": { "type": "string", "minLength": 1 },
+        "rawTaskType": { "type": "string", "minLength": 1 }
+      },
+      "additionalProperties": false
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "taskType": { "const": "topic_video" } }, "required": ["taskType"] },
+      "then": {
+        "required": ["resourceSourceKey", "resourceItemExternalKey", "resourceItemUrl"],
+        "properties": {
+          "resourceSourceKey": { "type": "string", "minLength": 1 },
+          "resourceItemExternalKey": { "type": "string", "minLength": 1 },
+          "resourceItemUrl": { "type": "string", "format": "uri", "pattern": "^https://" }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "taskType": { "const": "meb_questions" } },
+        "required": ["taskType"]
+      },
+      "then": {
+        "required": [
+          "resourceSourceKey",
+          "resourceItemExternalKey",
+          "resourceItemUrl",
+          "allowedTopics"
+        ],
+        "properties": {
+          "resourceSourceKey": { "type": "string", "minLength": 1 },
+          "resourceItemExternalKey": { "type": "string", "minLength": 1 },
+          "resourceItemUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+          "allowedTopics": {
+            "type": "array",
+            "minItems": 1,
+            "items": { "type": "string", "minLength": 1 },
+            "uniqueItems": true
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "taskType": { "enum": ["daily_math_benchmark", "daily_paragraph_benchmark"] }
+        },
+        "required": ["taskType"]
+      },
+      "then": {
+        "properties": { "plannedQuestionCount": { "const": 20 } },
+        "required": ["plannedQuestionCount"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "taskType": {
+            "enum": [
+              "topic_questions",
+              "mixed_questions",
+              "meb_questions",
+              "daily_math_extra",
+              "daily_paragraph_extra",
+              "branch_mock",
+              "full_mock"
+            ]
+          }
+        },
+        "required": ["taskType"]
+      },
+      "then": {
+        "properties": { "plannedQuestionCount": { "type": "integer", "minimum": 1 } },
+        "required": ["plannedQuestionCount"]
+      }
+    }
+  ],
+  "additionalProperties": false
+}

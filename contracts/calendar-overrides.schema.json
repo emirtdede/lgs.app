@@ -1,0 +1,50 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "LGS Calendar Overrides",
+  "type": "object",
+  "required": ["schemaVersion", "timezone", "auditDate", "policy", "overrides"],
+  "properties": {
+    "schemaVersion": {
+      "const": 1
+    },
+    "timezone": {
+      "const": "Europe/Istanbul"
+    },
+    "auditDate": {
+      "type": "string",
+      "format": "date"
+    },
+    "policy": {
+      "type": "string",
+      "minLength": 1
+    },
+    "overrides": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["date", "availability", "reason", "source"],
+        "properties": {
+          "date": {
+            "type": "string",
+            "format": "date"
+          },
+          "availability": {
+            "enum": ["full_day", "weekday_after_school", "custom"]
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "type": "string",
+            "format": "uri",
+            "pattern": "^https://"
+          }
+        },
+        "additionalProperties": false
+      },
+      "uniqueItems": true
+    }
+  },
+  "additionalProperties": false
+}

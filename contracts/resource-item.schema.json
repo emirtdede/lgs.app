@@ -1,0 +1,38 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Resolved Resource Item",
+  "type": "object",
+  "required": ["sourceKey", "externalKey", "label", "url", "position", "topicKeys", "evidence"],
+  "properties": {
+    "sourceKey": { "type": "string", "minLength": 1 },
+    "externalKey": { "type": "string", "minLength": 1 },
+    "label": { "type": "string", "minLength": 1 },
+    "url": { "type": "string", "format": "uri", "pattern": "^https://" },
+    "position": { "type": "integer", "minimum": 1 },
+    "durationSeconds": { "type": ["integer", "null"], "minimum": 0 },
+    "topicKeys": {
+      "type": "array",
+      "items": { "type": "string", "minLength": 1 },
+      "uniqueItems": true
+    },
+    "evidence": {
+      "type": "object",
+      "required": ["method", "checkedAt", "sourceUrl", "matchMethod"],
+      "properties": {
+        "method": { "enum": ["public-source-page", "official-page", "provided-reference"] },
+        "checkedAt": { "type": "string", "format": "date-time" },
+        "sourceUrl": { "type": "string", "format": "uri", "pattern": "^https://" },
+        "matchMethod": {
+          "enum": [
+            "exact-external-id",
+            "exact-title-and-position",
+            "official-item-identifier",
+            "provided-reference-exact"
+          ]
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false
+}

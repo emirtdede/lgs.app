@@ -1,0 +1,131 @@
+- generic [active] [ref=f1e1]:
+  - generic [ref=f1e2]:
+    - link "Ana içeriğe atla" [ref=f1e3] [cursor=pointer]:
+      - /url: "#main-content"
+    - generic [ref=f1e4]:
+      - banner [ref=f1e5]:
+        - generic [ref=f1e6]:
+          - link "Operis" [ref=f1e8] [cursor=pointer]:
+            - /url: /tr
+            - img "Operis" [ref=f1e10]
+          - navigation "Main Navigation" [ref=f1e11]:
+            - link "Akış" [ref=f1e12] [cursor=pointer]:
+              - /url: /tr/akis
+            - link "İlanlar" [ref=f1e13] [cursor=pointer]:
+              - /url: /tr/ilanlar
+            - link "Kategoriler" [ref=f1e14] [cursor=pointer]:
+              - /url: /tr/kategoriler
+          - generic [ref=f1e15]:
+            - button "Hızlı Arama" [ref=f1e16] [cursor=pointer]
+            - link [ref=f1e20] [cursor=pointer]:
+              - /url: /tr/giris
+              - button "Giriş Yap" [ref=f1e21]
+            - link [ref=f1e26] [cursor=pointer]:
+              - /url: /tr/kayit
+              - button "Kayıt Ol" [ref=f1e27]
+      - status "Yükleniyor..." [ref=f1e33]:
+        - banner [ref=f1e35]
+      - contentinfo [ref=f1e201]:
+        - generic [ref=f1e203]:
+          - generic [ref=f1e204]:
+            - generic [ref=f1e205]:
+              - img "Operis" [ref=f1e208]
+              - paragraph [ref=f1e209]: Yazılım mühendisleri ve teknoloji ekipleri için doğrudan, şeffaf ve %100 komisyonsuz bağımsız eşleştirme ağı.
+            - generic [ref=f1e210]:
+              - heading "Platform & Keşfet" [level=3] [ref=f1e211]
+              - list [ref=f1e212]:
+                - listitem [ref=f1e213]:
+                  - link "İlan Akışı" [ref=f1e214] [cursor=pointer]:
+                    - /url: /tr/akis
+                - listitem [ref=f1e215]:
+                  - link "İlanları Keşfet" [ref=f1e216] [cursor=pointer]:
+                    - /url: /tr/ilanlar
+                - listitem [ref=f1e217]:
+                  - link "Teknoloji Kategorileri" [ref=f1e218] [cursor=pointer]:
+                    - /url: /tr/kategoriler
+                - listitem [ref=f1e219]:
+                  - link "Proje İlanı Yayınla" [ref=f1e220] [cursor=pointer]:
+                    - /url: /tr/ilanlar/yeni
+                - listitem [ref=f1e221]:
+                  - link "Yardım & SSS" [ref=f1e222] [cursor=pointer]:
+                    - /url: /tr/yardim
+            - generic [ref=f1e223]:
+              - heading "Mimari & Güvenlik" [level=3] [ref=f1e224]
+              - list [ref=f1e225]:
+                - listitem [ref=f1e226]:
+                  - link "Hakkımızda & Manifesto" [ref=f1e227] [cursor=pointer]:
+                    - /url: /tr/hakkimizda
+                - listitem [ref=f1e228]:
+                  - link "İletişim & Destek" [ref=f1e229] [cursor=pointer]:
+                    - /url: /tr/iletisim
+                - listitem [ref=f1e230]:
+                  - link "%0 Komisyon Modeli" [ref=f1e231] [cursor=pointer]:
+                    - /url: /tr/hakkimizda#zero-commission
+                - listitem [ref=f1e232]:
+                  - link "AES-256 Şifreli Teklifler" [ref=f1e233] [cursor=pointer]:
+                    - /url: /tr/hakkimizda#encrypted-offers
+                - listitem [ref=f1e234]:
+                  - link "1 Haftalık Canlılık Radarı" [ref=f1e235] [cursor=pointer]:
+                    - /url: /tr/hakkimizda#freshness-radar
+                - listitem [ref=f1e236]:
+                  - link "Kötüye Kullanım Bildir" [ref=f1e237] [cursor=pointer]:
+                    - /url: /tr/sikayet-bildir
+                - listitem [ref=f1e238]:
+                  - link "Marka & Medya Kiti" [ref=f1e239] [cursor=pointer]:
+                    - /url: /tr/marka
+            - generic [ref=f1e240]:
+              - heading "Yasal & Şeffaflık" [level=3] [ref=f1e241]
+              - list [ref=f1e242]:
+                - listitem [ref=f1e243]:
+                  - link "Yasal & Güven Merkezi" [ref=f1e244] [cursor=pointer]:
+                    - /url: /tr/yasal
+                - listitem [ref=f1e245]:
+                  - link "Kullanım Koşulları" [ref=f1e246] [cursor=pointer]:
+                    - /url: /tr/yasal/kullanim-kosullari
+                - listitem [ref=f1e247]:
+                  - link "KVKK Aydınlatma Metni" [ref=f1e248] [cursor=pointer]:
+                    - /url: /tr/yasal/gizlilik-ve-kvkk
+                - listitem [ref=f1e249]:
+                  - link "Eşleştirme ve Sorumluluk Reddi Beyanı" [ref=f1e250] [cursor=pointer]:
+                    - /url: /tr/yasal/eslestirme-ve-sorumluluk-reddi
+                - listitem [ref=f1e251]:
+                  - link "Kabul Edilebilir Kullanım Politikası" [ref=f1e252] [cursor=pointer]:
+                    - /url: /tr/yasal/kabul-edilebilir-kullanim
+                - listitem [ref=f1e253]:
+                  - link "Çerez Politikası" [ref=f1e254] [cursor=pointer]:
+                    - /url: /tr/yasal/cerez-politikasi
+                - listitem [ref=f1e255]:
+                  - link "Yasal İletişim Bilgileri" [ref=f1e256] [cursor=pointer]:
+                    - /url: /tr/yasal/iletisim
+                - listitem [ref=f1e257]:
+                  - button "Çerez Tercihleri" [ref=f1e258] [cursor=pointer]
+          - generic [ref=f1e259]:
+            - paragraph [ref=f1e260]: © 2026 Operis. Tüm hakları saklıdır.
+            - generic [ref=f1e261]:
+              - generic [ref=f1e262]:
+                - button "Dil Seçimi Menüsü" [ref=f1e264] [cursor=pointer]
+                - generic [ref=f1e268]: •
+                - button "Görünüm ve Tema Menüsü" [ref=f1e270] [cursor=pointer]
+              - link "Designed & Developed by Vellium" [ref=f1e278] [cursor=pointer]:
+                - /url: https://vellium.dev/
+        - generic:
+          - generic:
+            - img [aria-hidden]:
+              - generic: peris
+      - region "Çerez Bildirimi" [ref=f1e283]:
+        - generic [ref=f1e289]:
+          - paragraph [ref=f1e290]:
+            - strong [ref=f1e291]: “Kabul Et”
+            - text: butonuna tıklayarak, site gezintisini iyileştirmek, kullanımı analiz etmek ve pazarlama faaliyetlerimizi desteklemek için cihazınızda çerez saklanmasını kabul etmiş olursunuz. Detaylar için
+            - link "Gizlilik Politikası" [ref=f1e292] [cursor=pointer]:
+              - /url: /tr/yasal/gizlilik-ve-kvkk
+            - text: ve
+            - link "Çerez Politikası" [ref=f1e293] [cursor=pointer]:
+              - /url: /tr/yasal/cerez-politikasi
+            - text: sayfalarımızı inceleyebilirsiniz.
+          - generic [ref=f1e294]:
+            - button "Yalnızca Gerekli" [ref=f1e295] [cursor=pointer]
+            - button "Tercihler" [ref=f1e296] [cursor=pointer]
+            - button "Tümünü Kabul Et" [ref=f1e297] [cursor=pointer]
+  - button "Open Next.js Dev Tools" [ref=f1e303] [cursor=pointer]
+  - alert [ref=f1e307]

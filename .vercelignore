@@ -1,0 +1,8 @@
+android/
+.gradle/
+tests/
+scratch/
+scripts/
+data/
+*.xlsx
+.git

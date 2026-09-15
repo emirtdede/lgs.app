@@ -1,0 +1,78 @@
+{
+  "schemaVersion": 1,
+  "auditDate": "2026-09-13",
+  "sources": [
+    {
+      "key": "math-main",
+      "subject": "math",
+      "role": "main",
+      "fixedByOwner": true,
+      "url": "https://www.youtube.com/watch?v=EuJ89QzqrAg&list=PLicNtF7vp6fnfDqrRLH6H7fIbzYT4ct4F&index=11",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "math-backup",
+      "subject": "math",
+      "role": "backup",
+      "fixedByOwner": true,
+      "url": "https://www.youtube.com/watch?v=Z7exqEHEqQA&list=PLHN_SjKO7rCI&index=3",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "turkish-main",
+      "subject": "turkish",
+      "role": "main",
+      "fixedByOwner": true,
+      "url": "https://www.youtube.com/watch?v=VYsPntNKVdw&list=PLIBjFaUoJJ91bz7QQEBlxNJNZka5YQRr6",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "science-topic",
+      "subject": "science",
+      "role": "topic",
+      "fixedByOwner": false,
+      "url": "https://www.youtube.com/watch?v=AHdk01aR4Ko&list=PLrQm7mt99FRV_Oe9xFavWzFpCIl7_XiWj",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "science-questions",
+      "subject": "science",
+      "role": "questions",
+      "fixedByOwner": false,
+      "url": "https://www.youtube.com/watch?v=pQXhWnDZ3vM&list=PLrQm7mt99FRXcBnorCttd31HJEvg0En26&index=23",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "history-main",
+      "subject": "history",
+      "role": "main",
+      "fixedByOwner": false,
+      "url": "https://www.youtube.com/watch?v=MltIX0oKpYU&list=PLsAsBPsriHNbXit4Ra3iuBrk1ZHZWxsOR&index=78",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "religion-main",
+      "subject": "religion",
+      "role": "main",
+      "fixedByOwner": false,
+      "url": "https://www.youtube.com/watch?v=wvdOE_75VnA&list=PLbRoPq-Zu-SWXGUbVt4t4UWo-4VjsMUo-&index=2",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "english-main",
+      "subject": "english",
+      "role": "main",
+      "fixedByOwner": false,
+      "url": "https://www.youtube.com/watch?v=FaY3dFjZbns&list=PLSgpQDrUSYp94WgE9pzpHiOG5FwxnZBrr",
+      "exactItemResolutionRequired": true
+    },
+    {
+      "key": "meb-official",
+      "subject": null,
+      "role": "official-validation",
+      "fixedByOwner": false,
+      "url": "https://odsgm.meb.gov.tr/www/8sinif-calisma-sorulari/icerik/1632",
+      "exactItemResolutionRequired": true
+    }
+  ]
+}
