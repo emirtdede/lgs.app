@@ -1,5 +1,5 @@
 // LGS 2027 Study Tracker Service Worker
-const CACHE_NAME = "lgs2027-shell-v1";
+const CACHE_NAME = "lgs2027-shell-v2";
 
 const STATIC_ASSETS = [
   "/",

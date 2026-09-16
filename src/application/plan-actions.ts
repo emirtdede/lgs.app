@@ -1,6 +1,6 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
+import { revalidatePath, updateTag } from "next/cache";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { validateReschedule, type RescheduleTaskInput } from "@/domain/plan-reschedule";
 import { mapDatabaseError, type ActionResponse } from "./error-map";
@@ -110,6 +110,7 @@ export async function rescheduleTaskAction(
       };
     }
 
+    updateTag("plan-data");
     revalidatePath("/today");
     revalidatePath("/plan");
     revalidatePath("/takvim");
@@ -182,6 +183,7 @@ export async function cancelPlanTaskAction(
       };
     }
 
+    updateTag("plan-data");
     revalidatePath("/today");
     revalidatePath("/plan");
     revalidatePath("/takvim");

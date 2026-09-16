@@ -87,13 +87,15 @@ export function StudentSettingsClientView() {
         </div>
       )}
 
-      <div>
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-          Ayarlar & Tercihler
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-1">
-          İsteğe bağlı bildirimler, çevrimdışı senkronizasyon ve LGS 2027 hedef özeti.
-        </p>
+      <div className="flex items-center justify-between gap-2 mb-2">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <h1 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 truncate whitespace-nowrap">
+            Ayarlar & Tercihler
+          </h1>
+          <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-normal truncate whitespace-nowrap hidden xs:inline">
+            • Öğrenci Profili
+          </span>
+        </div>
       </div>
 
       {/* 1. NOTIFICATIONS CARD (STRICTLY OPT-IN & TOGGLEABLE) */}
@@ -175,33 +177,27 @@ export function StudentSettingsClientView() {
             </button>
           </div>
 
-          {/* Daily Study Reminder */}
-          <div className="flex items-center justify-between p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800">
-            <div className="pr-3">
-              <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
-                <Rocket className="w-4 h-4 text-blue-500" /> Günlük Ders Başlangıç Hatırlatması
-              </span>
-              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
-                Belirlediğin saatte günün 20 soruluk hedeflerini masana davet eder.
-              </p>
-            </div>
-            <div className="flex items-center gap-2 shrink-0">
-              <input
-                type="time"
-                value={prefs.reminderTime}
-                onChange={(e) => handleTimeChange(e.target.value)}
-                className="px-2 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-mono"
-              />
+          {/* Daily Study Reminder (Never overflows mobile width) */}
+          <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-800/50 border border-slate-100 dark:border-slate-800 space-y-2.5">
+            <div className="flex items-center justify-between gap-3">
+              <div className="min-w-0 flex-1">
+                <span className="text-xs font-bold text-slate-800 dark:text-slate-200 flex items-center gap-1.5 truncate">
+                  <Rocket className="w-4 h-4 text-blue-500 shrink-0" /> Günlük Ders Hatırlatması
+                </span>
+                <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
+                  Günün 20 soruluk hedeflerini masana davet eder.
+                </p>
+              </div>
               <button
                 type="button"
                 role="switch"
                 aria-checked={prefs.dailyReminder}
                 onClick={() => handleSubToggle("dailyReminder")}
-                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 after:absolute after:-inset-2 after:content-[''] ${
+                className={`relative inline-flex h-6 w-11 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-hidden focus-visible:ring-2 focus-visible:ring-blue-600 focus-visible:ring-offset-2 ${
                   prefs.dailyReminder ? "bg-blue-600" : "bg-slate-300 dark:bg-slate-700"
                 }`}
               >
-                <span className="sr-only">Günlük Ders Başlangıç Hatırlatması</span>
+                <span className="sr-only">Günlük Ders Hatırlatması</span>
                 <span
                   aria-hidden="true"
                   className={`pointer-events-none inline-block h-5 w-5 transform rounded-full bg-white shadow-md ring-0 transition duration-200 ease-in-out ${
@@ -210,6 +206,21 @@ export function StudentSettingsClientView() {
                 />
               </button>
             </div>
+
+            {/* Time Picker Row when enabled */}
+            {prefs.dailyReminder && (
+              <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-slate-700/60 text-xs">
+                <span className="text-slate-600 dark:text-slate-400 font-medium">
+                  Hatırlatma Saati:
+                </span>
+                <input
+                  type="time"
+                  value={prefs.reminderTime}
+                  onChange={(e) => handleTimeChange(e.target.value)}
+                  className="px-2.5 py-1 rounded-lg border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-xs font-semibold text-slate-800 dark:text-slate-200"
+                />
+              </div>
+            )}
           </div>
 
           {/* Daily Motivation Quote */}

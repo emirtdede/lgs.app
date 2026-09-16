@@ -16,7 +16,7 @@ const navItems: NavItem[] = [
     label: "Bugün",
     icon: (active) => (
       <svg
-        className={`w-6 h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
+        className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -35,7 +35,7 @@ const navItems: NavItem[] = [
     label: "Plan",
     icon: (active) => (
       <svg
-        className={`w-6 h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
+        className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -54,7 +54,7 @@ const navItems: NavItem[] = [
     label: "Gelişim",
     icon: (active) => (
       <svg
-        className={`w-6 h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
+        className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -73,7 +73,7 @@ const navItems: NavItem[] = [
     label: "Yanlışlar",
     icon: (active) => (
       <svg
-        className={`w-6 h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
+        className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -92,7 +92,7 @@ const navItems: NavItem[] = [
     label: "Notlarım",
     icon: (active) => (
       <svg
-        className={`w-6 h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
+        className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -111,7 +111,7 @@ const navItems: NavItem[] = [
     label: "Ayarlar",
     icon: (active) => (
       <svg
-        className={`w-6 h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
+        className={`w-5 h-5 sm:w-6 sm:h-6 ${active ? "text-blue-600 dark:text-blue-400" : "text-slate-500"}`}
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -139,9 +139,9 @@ export function StudentNav() {
   return (
     <nav
       aria-label="Öğrenci Gezinme Menüsü"
-      className="fixed bottom-0 left-0 right-0 z-40 bg-white dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 shadow-lg md:relative md:border-t-0 md:border-b md:shadow-none"
+      className="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 shadow-lg md:relative md:border-t-0 md:border-b md:shadow-none pb-[env(safe-area-inset-bottom)]"
     >
-      <div className="max-w-2xl mx-auto flex items-center justify-around px-2 py-1 md:py-2">
+      <div className="max-w-2xl mx-auto grid grid-cols-6 items-center px-1 py-1 md:py-2">
         {navItems.map((item) => {
           const isActive =
             pathname === item.href || (item.href !== "/today" && pathname?.startsWith(item.href));
@@ -149,7 +149,8 @@ export function StudentNav() {
             <Link
               key={item.href}
               href={item.href}
-              className={`flex flex-col items-center justify-center min-w-[56px] min-h-[48px] px-2 py-1 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
+              prefetch={true}
+              className={`flex flex-col items-center justify-center w-full min-h-[44px] py-1 px-0.5 rounded-xl transition-colors focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 ${
                 isActive
                   ? "text-blue-600 dark:text-blue-400 font-semibold"
                   : "text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100"
@@ -157,7 +158,9 @@ export function StudentNav() {
               aria-current={isActive ? "page" : undefined}
             >
               <div className="mb-0.5">{item.icon(isActive)}</div>
-              <span className="text-xs tracking-tight">{item.label}</span>
+              <span className="text-[10px] sm:text-xs tracking-tight truncate w-full text-center leading-none">
+                {item.label}
+              </span>
             </Link>
           );
         })}

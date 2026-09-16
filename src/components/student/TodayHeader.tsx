@@ -41,11 +41,12 @@ export function TodayHeader({
   );
 
   return (
-    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 py-3 sm:py-3.5">
+    <header className="bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-3 sm:px-4 py-2.5 sm:py-3">
       <div className="max-w-2xl mx-auto">
-        <div className="flex items-center justify-between gap-2 mb-2">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-2xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 shadow-xs flex-shrink-0 flex items-center justify-center">
+        {/* Row 1: Avatar, Greeting, Date & Completion Badge in a strictly single-line row */}
+        <div className="flex items-center justify-between gap-2">
+          <div className="flex items-center gap-2 min-w-0 flex-1">
+            <div className="w-8 h-8 sm:w-9 sm:h-9 rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 bg-white dark:bg-slate-800 shadow-2xs shrink-0 flex items-center justify-center">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/icons/icon-192.png"
@@ -53,22 +54,23 @@ export function TodayHeader({
                 className="w-full h-full object-contain p-0.5"
               />
             </div>
-            <div>
-              <h1 className="text-xl md:text-2xl font-bold text-slate-900 dark:text-slate-100 tracking-tight">
+            <div className="flex items-baseline gap-1.5 min-w-0 truncate">
+              <h1 className="text-xs sm:text-sm font-bold text-slate-900 dark:text-slate-100 tracking-tight truncate whitespace-nowrap">
                 Merhaba, {studentName}
               </h1>
-              <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mt-0.5">
-                {formattedDate}
-              </p>
+              <span className="text-[11px] sm:text-xs text-slate-400 dark:text-slate-500 font-normal truncate whitespace-nowrap hidden xs:inline">
+                <span className="opacity-60 mr-1">•</span>
+                <span>{formattedDate}</span>
+              </span>
             </div>
           </div>
-          <div className="text-right">
+          <div className="shrink-0">
             {totalRequired > 0 ? (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 whitespace-nowrap">
                 %{percent} Tamamlandı
               </span>
             ) : (
-              <span className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
+              <span className="inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-medium bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200 dark:border-slate-700 whitespace-nowrap">
                 Hazırlık Dönemi
               </span>
             )}
@@ -77,15 +79,15 @@ export function TodayHeader({
 
         {/* Progress Bar or Status Note */}
         {totalRequired > 0 ? (
-          <div className="mt-3">
-            <div className="flex justify-between items-center text-xs text-slate-600 dark:text-slate-400 mb-1.5 font-medium">
+          <div className="mt-2 sm:mt-2.5">
+            <div className="flex justify-between items-center text-[11px] text-slate-500 dark:text-slate-400 mb-1 font-medium">
               <span>Günün Hedefleri</span>
-              <span>
+              <span className="font-semibold text-slate-700 dark:text-slate-300">
                 {completedRequired} / {totalRequired} görev
               </span>
             </div>
             <div
-              className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2.5 overflow-hidden"
+              className="w-full bg-slate-100 dark:bg-slate-800 rounded-full h-2 overflow-hidden"
               role="progressbar"
               aria-valuenow={percent}
               aria-valuemin={0}
@@ -93,15 +95,15 @@ export function TodayHeader({
               aria-label="Günlük hedef tamamlama oranı"
             >
               <div
-                className="bg-blue-600 dark:bg-blue-500 h-2.5 rounded-full transition-all duration-500 ease-out"
+                className="bg-blue-600 dark:bg-blue-500 h-2 rounded-full transition-all duration-500 ease-out"
                 style={{ width: `${percent}%` }}
               />
             </div>
           </div>
         ) : (
-          <div className="mt-2.5 flex items-center justify-between text-xs text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/60">
-            <span>Bugün için henüz planlanmış ders görevi yok.</span>
-            <span className="font-semibold text-blue-600 dark:text-blue-400">
+          <div className="mt-2 flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 pt-1 border-t border-slate-100 dark:border-slate-800/60">
+            <span className="truncate">Bugün için henüz planlanmış görev yok.</span>
+            <span className="font-semibold text-blue-600 dark:text-blue-400 shrink-0 ml-1">
               1 Ekim Başlangıcı
             </span>
           </div>
@@ -123,25 +125,24 @@ export function TodayHeader({
             </button>
 
             {/* Center: Single-line Minimal Day & Date Indicator */}
-            <div className="flex items-center gap-1.5 min-w-0">
+            <div className="flex items-center gap-1.5 min-w-0 flex-1 justify-center">
               <button
                 type="button"
                 onClick={() => datePickerRef.current?.showPicker?.()}
-                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 transition-colors"
+                className="inline-flex items-center gap-1.5 px-2 py-1 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-800 text-xs sm:text-sm font-semibold text-slate-800 dark:text-slate-200 transition-colors max-w-full min-w-0"
                 title="Tarih seçmek için tıkla"
               >
                 <Calendar className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400 shrink-0" />
-                <span>{dayNumber ? `${dayNumber}. Gün` : formattedDate}</span>
+                <span className="truncate">
+                  {dayNumber ? `${dayNumber}. Gün` : formattedDate}
+                  {isPlanStartFallback && " • 1 Ekim (Önizleme)"}
+                </span>
 
-                {isPlanStartFallback ? (
-                  <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400 shrink-0">
-                    • 1 Ekim (Önizleme)
-                  </span>
-                ) : !isNavigatedAway ? (
+                {!isPlanStartFallback && !isNavigatedAway && (
                   <span className="hidden xs:inline text-[11px] font-normal text-slate-400 dark:text-slate-500 shrink-0">
                     • Bugün
                   </span>
-                ) : null}
+                )}
               </button>
 
               {isNavigatedAway && (

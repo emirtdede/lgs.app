@@ -212,7 +212,8 @@ export async function getAdultDashboardData(
        effective_day:plan_days!tasks_current_plan_day_id_fkey(plan_date),
        task_completions(status)`
       )
-      .order("sort_order", { ascending: true });
+      .order("sort_order", { ascending: true })
+      .limit(10000);
 
     const allRawTasks: RawDayTask[] = [];
     const overdueTasksList: AdultDashboardData["overdueTasks"] = [];

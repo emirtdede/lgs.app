@@ -474,14 +474,15 @@ export function ProgressClientView({
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
       {/* 1. HEADER */}
-      <div className="mb-6">
-        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-          Kendi Gelişimim
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-          Hız ve doğruluk verileri sadece senin kendi geçmişinle karşılaştırılır. Başkalarıyla
-          kıyaslama veya sıralama yapılmaz.
-        </p>
+      <div className="flex items-center justify-between gap-2 mb-4">
+        <div className="flex items-center gap-2 min-w-0 flex-1">
+          <h1 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 truncate whitespace-nowrap">
+            Kendi Gelişimim
+          </h1>
+          <span className="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-normal truncate whitespace-nowrap hidden xs:inline">
+            • Bireysel Hız & Net Takibi
+          </span>
+        </div>
       </div>
 
       {/* 2. TOP KPI CARDS */}

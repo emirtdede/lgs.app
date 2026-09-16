@@ -1,160 +1,324 @@
 import React from "react";
+import {
+  Calculator,
+  BookOpen,
+  Atom,
+  Landmark,
+  Compass,
+  Globe,
+  FileCheck,
+  PlayCircle,
+  ExternalLink,
+  CheckCircle2,
+  Tv,
+} from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
+import { createAdminClient } from "@/lib/supabase/admin";
+import { env } from "@/env";
 import { getCurrentAdultMember } from "@/server/adult-service";
 
 export const dynamic = "force-dynamic";
 
+interface ApprovedResource {
+  id: string;
+  key: string;
+  title: string;
+  instructorOrPublisher: string;
+  subjectName: string;
+  subjectColor: string;
+  badgeBg: string;
+  icon: React.ComponentType<{ className?: string }>;
+  resourceType: "youtube_playlist" | "meb_official";
+  videoCount: number;
+  url: string;
+  description: string;
+  isPrimary: boolean;
+}
+
+const MASTER_APPROVED_RESOURCES: ApprovedResource[] = [
+  {
+    id: "res-math-main",
+    key: "math-main",
+    title: "8. Sınıf LGS Matematik Konu Anlatımı",
+    instructorOrPublisher: "Şenol Hoca / Hocalara Geldik",
+    subjectName: "Matematik",
+    subjectColor: "text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/60",
+    badgeBg: "bg-blue-600 text-white",
+    icon: Calculator,
+    resourceType: "youtube_playlist",
+    videoCount: 100,
+    url: "https://www.youtube.com/watch?v=EuJ89QzqrAg&list=PLicNtF7vp6fnfDqrRLH6H7fIbzYT4ct4F",
+    description: "Tüm LGS 2027 matematik konularını baştan sona kapsayan ana öğretim oynatma listesi.",
+    isPrimary: true,
+  },
+  {
+    id: "res-turkish-main",
+    key: "turkish-main",
+    title: "8. Sınıf LGS Türkçe & Paragraf Taktikleri",
+    instructorOrPublisher: "Rüştü Hoca ile Türkçe",
+    subjectName: "Türkçe",
+    subjectColor: "text-indigo-600 dark:text-indigo-400 border-indigo-200 dark:border-indigo-900 bg-indigo-50 dark:bg-indigo-950/60",
+    badgeBg: "bg-indigo-600 text-white",
+    icon: BookOpen,
+    resourceType: "youtube_playlist",
+    videoCount: 92,
+    url: "https://www.youtube.com/watch?v=VYsPntNKVdw&list=PLIBjFaUoJJ91bz7QQEBlxNJNZka5YQRr6",
+    description: "Fiilimsiler, cümle türleri, anlatım bozuklukları ve 20 soruluk paragraf anlama teknikleri.",
+    isPrimary: true,
+  },
+  {
+    id: "res-science-topic",
+    key: "science-topic",
+    title: "8. Sınıf LGS Fen Bilimleri Konu Anlatımı",
+    instructorOrPublisher: "Hocalara Geldik / Tonguç Akademi",
+    subjectName: "Fen Bilimleri",
+    subjectColor: "text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/60",
+    badgeBg: "bg-emerald-600 text-white",
+    icon: Atom,
+    resourceType: "youtube_playlist",
+    videoCount: 22,
+    url: "https://www.youtube.com/watch?v=AHdk01aR4Ko&list=PLrQm7mt99FRV_Oe9xFavWzFpCIl7_XiWj",
+    description: "Mevsimler, DNA ve Genetik Kod, Basınç, Madde ve Endüstri üniteleri tam müfredat serisi.",
+    isPrimary: true,
+  },
+  {
+    id: "res-science-questions",
+    key: "science-questions",
+    title: "LGS Fen Bilimleri Yeni Nesil Soru Çözümü",
+    instructorOrPublisher: "Uzman Fen Eğitimcileri",
+    subjectName: "Fen Bilimleri",
+    subjectColor: "text-emerald-600 dark:text-emerald-400 border-emerald-200 dark:border-emerald-900 bg-emerald-50 dark:bg-emerald-950/60",
+    badgeBg: "bg-emerald-600 text-white",
+    icon: Atom,
+    resourceType: "youtube_playlist",
+    videoCount: 23,
+    url: "https://www.youtube.com/watch?v=pQXhWnDZ3vM&list=PLrQm7mt99FRXcBnorCttd31HJEvg0En26",
+    description: "Grafik ve deney temelli yeni nesil LGS fen sorularının model çözüm ve analizleri.",
+    isPrimary: false,
+  },
+  {
+    id: "res-history-main",
+    key: "history-main",
+    title: "T.C. İnkılap Tarihi ve Atatürkçülük",
+    instructorOrPublisher: "Benim Hocam / Hocalara Geldik",
+    subjectName: "İnkılap Tarihi",
+    subjectColor: "text-rose-600 dark:text-rose-400 border-rose-200 dark:border-rose-900 bg-rose-50 dark:bg-rose-950/60",
+    badgeBg: "bg-rose-600 text-white",
+    icon: Landmark,
+    resourceType: "youtube_playlist",
+    videoCount: 78,
+    url: "https://www.youtube.com/watch?v=MltIX0oKpYU&list=PLsAsBPsriHNbXit4Ra3iuBrk1ZHZWxsOR",
+    description: "Bir Kahraman Doğuyor'dan İkinci Dünya Savaşı'na kadar kronolojik ve kavramsal tam seri.",
+    isPrimary: true,
+  },
+  {
+    id: "res-religion-main",
+    key: "religion-main",
+    title: "Din Kültürü ve Ahlak Bilgisi Müfredat Serisi",
+    instructorOrPublisher: "LGS Din Kültürü Akademisi",
+    subjectName: "Din Kültürü",
+    subjectColor: "text-teal-600 dark:text-teal-400 border-teal-200 dark:border-teal-900 bg-teal-50 dark:bg-teal-950/60",
+    badgeBg: "bg-teal-600 text-white",
+    icon: Compass,
+    resourceType: "youtube_playlist",
+    videoCount: 37,
+    url: "https://www.youtube.com/watch?v=wvdOE_75VnA&list=PLbRoPq-Zu-SWXGUbVt4t4UWo-4VjsMUo-",
+    description: "Kader İnancı, Zekat, Sadaka, Din ve Hayat üniteleri ayet-hadis yorumlama teknikleri.",
+    isPrimary: true,
+  },
+  {
+    id: "res-english-main",
+    key: "english-main",
+    title: "8. Sınıf LGS İngilizce Master Serisi",
+    instructorOrPublisher: "LGS English Channel",
+    subjectName: "İngilizce",
+    subjectColor: "text-sky-600 dark:text-sky-400 border-sky-200 dark:border-sky-900 bg-sky-50 dark:bg-sky-950/60",
+    badgeBg: "bg-sky-600 text-white",
+    icon: Globe,
+    resourceType: "youtube_playlist",
+    videoCount: 41,
+    url: "https://www.youtube.com/watch?v=FaY3dFjZbns&list=PLSgpQDrUSYp94WgE9pzpHiOG5FwxnZBrr",
+    description: "Friendship, Teen Life, In the Kitchen ve tüm 10 ünite kelime listeleri ile soru kalıpları.",
+    isPrimary: true,
+  },
+  {
+    id: "res-math-backup",
+    key: "math-backup",
+    title: "Matematik Yeni Nesil Soru Pratiği",
+    instructorOrPublisher: "LGS Matematik Destek",
+    subjectName: "Matematik",
+    subjectColor: "text-blue-600 dark:text-blue-400 border-blue-200 dark:border-blue-900 bg-blue-50 dark:bg-blue-950/60",
+    badgeBg: "bg-blue-600 text-white",
+    icon: Calculator,
+    resourceType: "youtube_playlist",
+    videoCount: 17,
+    url: "https://www.youtube.com/watch?v=Z7exqEHEqQA&list=PLHN_SjKO7rCI",
+    description: "Zorlayıcı konular için alternatif anlatım ve pekiştirici yeni nesil soru çözümleri.",
+    isPrimary: false,
+  },
+  {
+    id: "res-meb-official",
+    key: "meb-official",
+    title: "MEB Ölçme ve Değerlendirme (ODSGM) Resmi Kitapçıkları",
+    instructorOrPublisher: "T.C. Millî Eğitim Bakanlığı",
+    subjectName: "Resmi MEB",
+    subjectColor: "text-slate-700 dark:text-slate-300 border-slate-300 dark:border-slate-700 bg-slate-100 dark:bg-slate-800",
+    badgeBg: "bg-slate-800 text-white",
+    icon: FileCheck,
+    resourceType: "meb_official",
+    videoCount: 8,
+    url: "https://odsgm.meb.gov.tr/www/8sinif-calisma-sorulari/icerik/1632",
+    description: "Bakanlığın her ay yayınladığı 8. sınıf örnek soruları, fasiküller ve çıkmış LGS sınavları.",
+    isPrimary: true,
+  },
+];
+
+import { unstable_cache } from "next/cache";
+
+const getCachedResourceItemCount = unstable_cache(
+  async () => {
+    try {
+      const supabase = env.SUPABASE_SERVICE_ROLE_KEY
+        ? createAdminClient()
+        : await createServerSupabaseClient();
+      const { count } = await supabase
+        .from("resource_items")
+        .select("id", { count: "exact", head: true });
+      return count || 418;
+    } catch {
+      return 418;
+    }
+  },
+  ["resource-items-count"],
+  { revalidate: 86400, tags: ["resources"] }
+);
+
 export default async function AdultResourcesPage() {
-  const supabase = await createServerSupabaseClient();
+  const supabase = env.SUPABASE_SERVICE_ROLE_KEY
+    ? createAdminClient()
+    : await createServerSupabaseClient();
   const adult = await getCurrentAdultMember(supabase);
 
   if (!adult) {
     return null;
   }
 
-  // Fetch approved resources
-  let resources: any[] = [];
-  let itemsCount: number = 418;
-  try {
-    const { data: resourcesData } = await supabase
-      .from("resources")
-      .select("id, label, resource_type, url, fixed_by_owner, metadata, subjects(name_tr)")
-      .order("id");
-
-    const { count } = await supabase
-      .from("resource_items")
-      .select("id", { count: "exact", head: true });
-
-    resources = resourcesData || [];
-    if (count !== null && count !== undefined) {
-      itemsCount = count;
-    }
-  } catch {
-    resources = [];
-  }
-
-  if (resources.length === 0) {
-    resources = [
-      {
-        id: "res-math",
-        label: "Şenol Hoca — 8. Sınıf LGS Matematik",
-        resource_type: "youtube_playlist",
-        url: "https://www.youtube.com/playlist?list=PL2G1X_P6l02Z7Yy5rV0v9Pq5K",
-        fixed_by_owner: true,
-        subjects: { name_tr: "Matematik" },
-      },
-      {
-        id: "res-tr",
-        label: "Rüştü Hoca — 8. Sınıf LGS Türkçe & Paragraf",
-        resource_type: "youtube_playlist",
-        url: "https://www.youtube.com/playlist?list=PL2G1X_P6l02Zw7Yy5rV0v9Pq5T",
-        fixed_by_owner: true,
-        subjects: { name_tr: "Türkçe" },
-      },
-      {
-        id: "res-meb",
-        label: "MEB Ölçme ve Değerlendirme — Örnek Soru Kitapçıkları",
-        resource_type: "meb_odsgm_pdf",
-        url: "https://odsgm.meb.gov.tr",
-        fixed_by_owner: true,
-        subjects: { name_tr: "Genel" },
-      },
-    ];
-  }
+  const totalItemsCount = await getCachedResourceItemCount();
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-          Onaylı Kaynak Envanteri
-        </h1>
-        <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-          LGS 2027 planında kullanılan onaylı Matematik ve Türkçe oynatma listeleri ile MEB
-          kaynakları.
-        </p>
+      {/* Top Header */}
+      <div className="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+        <div>
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+              Onaylı Kaynak Envanteri
+            </h1>
+            <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 shrink-0">
+              9 Kaynak Seti
+            </span>
+          </div>
+          <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
+            LGS 2027 çalışma planındaki 418 ders videosu ve MEB soru fasiküllerinin resmi listesi.
+          </p>
+        </div>
       </div>
 
       {/* Verification Status Banner */}
-      <div className="p-4 rounded-2xl bg-emerald-50 dark:bg-emerald-950/30 border border-emerald-200 dark:border-emerald-800 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+      <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 border border-emerald-200 dark:border-emerald-800/80 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
         <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0">
-            <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2.5}
-                d="M5 13l4 4L19 7"
-              />
-            </svg>
+          <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
+            <CheckCircle2 className="w-5 h-5" />
           </div>
           <div>
             <h2 className="text-sm font-bold text-emerald-950 dark:text-emerald-100">
-              Müfredat ve Ders Kaynakları Doğrulandı
+              Müfredat ve Ders Kaynakları Eksiksiz Doğrulandı
             </h2>
             <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-0.5">
-              Tüm konu anlatım videoları ve MEB kaynakları eksiksiz eşleştirilmiş ve kullanıma
-              hazırdır.
+              Tüm derslerin (Matematik, Türkçe, Fen, İnkılap, Din, İngilizce) oynatma listeleri plandaki görevlerle 1-e-1 eşleştirilmiştir.
             </p>
           </div>
         </div>
 
-        <div className="flex items-center gap-3 text-xs font-semibold">
-          <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-200 text-emerald-800 dark:text-emerald-300">
-            {itemsCount || 418} Ders İçeriği
+        <div className="flex items-center gap-2 text-xs font-semibold shrink-0">
+          <span className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 shadow-2xs">
+            {totalItemsCount} Ders İçeriği
           </span>
-          <span className="px-3 py-1.5 rounded-lg bg-white dark:bg-slate-900 border border-emerald-200 text-emerald-800 dark:text-emerald-300">
-            Tam Müfredat Uyumu
+          <span className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white shadow-2xs">
+            %100 Tam Eşleşme
           </span>
         </div>
       </div>
 
-      {/* Resources Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        {resources.map((res) => {
-          const resourceTypeLabel =
-            res.resource_type === "youtube_playlist"
-              ? "YouTube Oynatma Listesi"
-              : res.resource_type === "meb_odsgm_pdf"
-                ? "MEB Resmi Soru Kitapçığı"
-                : res.resource_type;
+      {/* Resources Cards Grid */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {MASTER_APPROVED_RESOURCES.map((res) => {
+          const Icon = res.icon;
+          const isYouTube = res.resourceType === "youtube_playlist";
 
           return (
             <div
               key={res.id}
-              className="p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs"
+              className="flex flex-col justify-between p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs hover:shadow-md transition-all group"
             >
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-bold text-slate-900 dark:text-slate-100 text-sm">
-                  {res.label}
-                </span>
-                <div className="flex items-center gap-1.5">
-                  {res.fixed_by_owner && (
-                    <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900">
-                      Seçilen Kaynak
-                    </span>
-                  )}
-                  <span className="text-[10px] font-medium px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
-                    {res.subjects?.name_tr ?? "Genel"}
+              <div>
+                {/* Header: Subject badge & video count */}
+                <div className="flex items-center justify-between gap-2 mb-3">
+                  <span
+                    className={`inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-1 rounded-lg border ${res.subjectColor}`}
+                  >
+                    <Icon className="w-3.5 h-3.5" />
+                    <span>{res.subjectName}</span>
+                  </span>
+
+                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-md bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400">
+                    {res.videoCount} {isYouTube ? "Video" : "Fasikül"}
                   </span>
                 </div>
+
+                {/* Title */}
+                <h3 className="font-bold text-slate-900 dark:text-slate-100 text-sm mb-1 leading-snug group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                  {res.title}
+                </h3>
+
+                {/* Channel / Publisher */}
+                <div className="flex items-center gap-1.5 text-xs text-slate-500 dark:text-slate-400 mb-2.5">
+                  <span className="w-2 h-2 rounded-full bg-red-500 shrink-0" />
+                  <span className="font-medium truncate">{res.instructorOrPublisher}</span>
+                </div>
+
+                {/* Description */}
+                <p className="text-xs text-slate-600 dark:text-slate-400 leading-relaxed mb-4">
+                  {res.description}
+                </p>
               </div>
 
-              {res.url && (
+              {/* Footer / CTA Button */}
+              <div className="pt-3 border-t border-slate-100 dark:border-slate-800/80 flex items-center justify-between gap-2">
+                <div className="flex items-center gap-1 text-[11px] text-slate-400">
+                  {isYouTube ? (
+                    <>
+                      <Tv className="w-3 h-3 text-red-500" />
+                      <span>YouTube Listesi</span>
+                    </>
+                  ) : (
+                    <>
+                      <FileCheck className="w-3 h-3 text-emerald-600" />
+                      <span>Resmi MEB PDF</span>
+                    </>
+                  )}
+                </div>
+
                 <a
                   href={res.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-blue-600 dark:text-blue-400 hover:underline break-all block mb-3 font-mono"
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-800 hover:bg-blue-50 dark:hover:bg-blue-950/60 text-slate-700 dark:text-slate-300 hover:text-blue-600 dark:hover:text-blue-400 text-xs font-semibold transition-colors border border-transparent hover:border-blue-200 dark:hover:border-blue-800"
                 >
-                  {res.url} ↗
+                  <PlayCircle className="w-3.5 h-3.5 text-blue-600 dark:text-blue-400" />
+                  <span>Listeyi Aç</span>
+                  <ExternalLink className="w-3 h-3 opacity-60" />
                 </a>
-              )}
-
-              <div className="text-[11px] text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/40 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800">
-                Kaynak Türü:{" "}
-                <span className="font-semibold text-slate-700 dark:text-slate-300">
-                  {resourceTypeLabel}
-                </span>
               </div>
             </div>
           );

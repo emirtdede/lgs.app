@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import "./globals.css";
 import { ServiceWorkerRegister } from "@/components/pwa/ServiceWorkerRegister";
+import { NavigationProgress } from "@/components/common/NavigationProgress";
 
 export const metadata: Metadata = {
   title: "LGS 2027 Çalışma Takibi",
@@ -38,6 +39,7 @@ export default function RootLayout({
   return (
     <html lang="tr">
       <body>
+        <NavigationProgress />
         <ServiceWorkerRegister />
         <main className="min-h-screen flex flex-col">{children}</main>
       </body>

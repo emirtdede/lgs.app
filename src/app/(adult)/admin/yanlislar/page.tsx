@@ -1,18 +1,38 @@
 import React from "react";
+import { AlertCircle, CheckCircle2, Clock, Eye, HelpCircle } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
 import { createAdminClient } from "@/lib/supabase/admin";
 import { env } from "@/env";
 import { getCurrentAdultMember } from "@/server/adult-service";
+import { formatIstanbulLongDate } from "@/domain/time-utils";
 
 export const dynamic = "force-dynamic";
 
-const REASON_LABELS: Record<string, string> = {
-  knowledge_gap: "Bilgi Eksiği",
-  calculation_error: "İşlem Hatası",
-  misread: "Soruyu Yanlış Okuma",
-  attention: "Dikkatsizlik",
-  strategy: "Süre / Strateji",
-  unknown: "Diğer",
+const REASON_LABELS: Record<string, { label: string; color: string }> = {
+  knowledge_gap: {
+    label: "Bilgi Eksiği",
+    color: "bg-blue-50 text-blue-700 dark:bg-blue-950/60 dark:text-blue-300 border-blue-200 dark:border-blue-900",
+  },
+  calculation_error: {
+    label: "İşlem Hatası",
+    color: "bg-amber-50 text-amber-700 dark:bg-amber-950/60 dark:text-amber-300 border-amber-200 dark:border-amber-900",
+  },
+  misread: {
+    label: "Soruyu Yanlış Okuma",
+    color: "bg-purple-50 text-purple-700 dark:bg-purple-950/60 dark:text-purple-300 border-purple-200 dark:border-purple-900",
+  },
+  attention: {
+    label: "Dikkatsizlik",
+    color: "bg-rose-50 text-rose-700 dark:bg-rose-950/60 dark:text-rose-300 border-rose-200 dark:border-rose-900",
+  },
+  strategy: {
+    label: "Süre / Strateji",
+    color: "bg-teal-50 text-teal-700 dark:bg-teal-950/60 dark:text-teal-300 border-teal-200 dark:border-teal-900",
+  },
+  unknown: {
+    label: "Diğer",
+    color: "bg-slate-50 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700",
+  },
 };
 
 export default async function AdminMistakesPage() {
@@ -33,7 +53,8 @@ export default async function AdminMistakesPage() {
        subjects(name_tr),
        topics(name_tr)`
     )
-    .order("created_at", { ascending: false });
+    .order("created_at", { ascending: false })
+    .limit(500);
 
   const mistakes = (mistakesData as any[]) || [];
 
@@ -55,31 +76,48 @@ export default async function AdminMistakesPage() {
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
       <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900 dark:text-slate-100">
-          Yanlış Soru Analizi
+        <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
+          Yanlış Soru Analiz Havuzu
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-          Öğrencinin çözdüğü sorularda karşılaşılan yanlış nedenleri ve tekrar çözüm süreci.
+          Öğrencinin çözdüğü sorularda karşılaşılan yanlış nedenleri, hata kategorileri ve tekrar çözüm süreci.
         </p>
       </div>
 
       {/* KPI Cards */}
       <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-          <span className="text-xs font-medium text-slate-500 block mb-1">İncelenmedi (Açık)</span>
-          <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">{openCount}</span>
+        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs font-medium text-slate-500 block mb-1">İncelenmedi (Açık)</span>
+            <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">{openCount}</span>
+          </div>
+          <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+            <AlertCircle className="w-4 h-4" />
+          </div>
         </div>
-        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-          <span className="text-xs font-medium text-slate-500 block mb-1">İncelendi</span>
-          <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-            {reviewedCount}
-          </span>
+
+        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs font-medium text-slate-500 block mb-1">İncelendi</span>
+            <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
+              {reviewedCount}
+            </span>
+          </div>
+          <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+            <Eye className="w-4 h-4" />
+          </div>
         </div>
-        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-          <span className="text-xs font-medium text-slate-500 block mb-1">Çözüldü</span>
-          <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-            {resolvedCount}
-          </span>
+
+        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex items-center justify-between">
+          <div>
+            <span className="text-xs font-medium text-slate-500 block mb-1">Çözüldü</span>
+            <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
+              {resolvedCount}
+            </span>
+          </div>
+          <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+            <CheckCircle2 className="w-4 h-4" />
+          </div>
         </div>
       </div>
 
@@ -90,17 +128,17 @@ export default async function AdminMistakesPage() {
         </h2>
 
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-          {Object.entries(REASON_LABELS).map(([reasonKey, label]) => {
+          {Object.entries(REASON_LABELS).map(([reasonKey, meta]) => {
             const data = countsByReason.get(reasonKey) || { total: 0, resolved: 0 };
             return (
               <div
                 key={reasonKey}
-                className="p-3 bg-slate-50 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 text-center"
+                className="p-3 bg-slate-50/80 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 text-center flex flex-col justify-between"
               >
                 <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 truncate">
-                  {label}
+                  {meta.label}
                 </div>
-                <div className="text-xl font-bold text-slate-900 dark:text-slate-100 mt-1">
+                <div className="text-xl font-bold text-slate-900 dark:text-slate-100 my-1">
                   {data.total}
                 </div>
                 <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
@@ -114,60 +152,70 @@ export default async function AdminMistakesPage() {
 
       {/* Mistakes Detailed List */}
       <div className="bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl overflow-hidden shadow-xs">
-        <div className="p-4 border-b border-slate-100 dark:border-slate-800">
+        <div className="p-4 border-b border-slate-100 dark:border-slate-800 flex items-center justify-between">
           <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500">
             Kayıtlı Yanlış Sorular ({mistakes.length})
           </h2>
+          <span className="text-xs text-slate-400">
+            {openCount} açık soru çözülmeyi bekliyor
+          </span>
         </div>
 
         {/* Mobile Cards (Visible on screens < md) */}
         <div className="md:hidden divide-y divide-slate-100 dark:divide-slate-800">
-          {mistakes.map((m: any) => (
-            <div key={m.id} className="p-4 space-y-2">
-              <div className="flex items-center justify-between">
-                <span className="font-bold text-sm text-slate-900 dark:text-slate-100">
-                  {m.subjects?.name_tr ?? "Ders"}
-                </span>
-                {m.status === "open" ? (
-                  <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold text-[11px]">
-                    İncelenmedi
+          {mistakes.map((m: any) => {
+            const reasonMeta = REASON_LABELS[m.reason] || {
+              label: m.reason,
+              color: "bg-slate-50 text-slate-700 border-slate-200",
+            };
+
+            return (
+              <div key={m.id} className="p-4 space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="font-bold text-sm text-slate-900 dark:text-slate-100">
+                    {m.subjects?.name_tr ?? "Ders"}
                   </span>
-                ) : m.status === "reviewed" ? (
-                  <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold text-[11px]">
-                    İncelendi
+                  {m.status === "open" ? (
+                    <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold text-[11px] border border-amber-200 dark:border-amber-800">
+                      İncelenmedi
+                    </span>
+                  ) : m.status === "reviewed" ? (
+                    <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold text-[11px] border border-indigo-200 dark:border-indigo-800">
+                      İncelendi
+                    </span>
+                  ) : (
+                    <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold text-[11px] border border-emerald-200 dark:border-emerald-800">
+                      Çözüldü
+                    </span>
+                  )}
+                </div>
+
+                {m.topics?.name_tr && (
+                  <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
+                    {m.topics.name_tr}
+                  </div>
+                )}
+
+                <div className="flex items-center justify-between text-xs pt-1">
+                  <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${reasonMeta.color}`}>
+                    {reasonMeta.label}
                   </span>
-                ) : (
-                  <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold text-[11px]">
-                    Çözüldü
+                  <span className="text-[11px] text-slate-400">
+                    {formatIstanbulLongDate(m.created_at)}
                   </span>
+                </div>
+
+                {m.note && (
+                  <p className="text-xs text-slate-600 dark:text-slate-300 bg-slate-50 dark:bg-slate-800/50 p-2.5 rounded-xl border border-slate-100 dark:border-slate-800 italic">
+                    &ldquo;{m.note}&rdquo;
+                  </p>
                 )}
               </div>
-              {m.topics?.name_tr && (
-                <div className="text-xs text-slate-500 dark:text-slate-400 font-medium">
-                  {m.topics.name_tr}
-                </div>
-              )}
-              <div className="flex items-center justify-between text-xs text-slate-600 dark:text-slate-400 pt-1">
-                <span>
-                  Neden:{" "}
-                  <strong className="font-semibold text-slate-800 dark:text-slate-200">
-                    {REASON_LABELS[m.reason] ?? m.reason}
-                  </strong>
-                </span>
-                <span className="text-[11px] text-slate-400">
-                  {new Date(m.created_at).toLocaleDateString("tr-TR")}
-                </span>
-              </div>
-              {m.note && (
-                <p className="text-xs text-slate-500 dark:text-slate-400 bg-slate-50 dark:bg-slate-800/50 p-2 rounded-lg border border-slate-100 dark:border-slate-800 italic">
-                  &ldquo;{m.note}&rdquo;
-                </p>
-              )}
-            </div>
-          ))}
+            );
+          })}
 
           {mistakes.length === 0 && (
-            <div className="p-6 text-center text-slate-500 text-xs">
+            <div className="p-8 text-center text-slate-500 text-xs">
               Kayıtlı yanlış soru bulunmuyor.
             </div>
           )}
@@ -180,46 +228,57 @@ export default async function AdminMistakesPage() {
               <tr className="border-b border-slate-100 dark:border-slate-800 bg-slate-50 dark:bg-slate-800/50 text-slate-500 font-bold uppercase tracking-wider">
                 <th className="py-3 px-4">Tarih</th>
                 <th className="py-3 px-4">Ders / Konu</th>
-                <th className="py-3 px-4">Neden</th>
+                <th className="py-3 px-4">Hata Nedeni</th>
                 <th className="py-3 px-4">Öğrenci Notu</th>
                 <th className="py-3 px-4 text-right">Durum</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-100 dark:divide-slate-800 text-slate-700 dark:text-slate-300">
-              {mistakes.map((m: any) => (
-                <tr key={m.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
-                  <td className="py-3 px-4 text-slate-500">
-                    {new Date(m.created_at).toLocaleDateString("tr-TR")}
-                  </td>
-                  <td className="py-3 px-4">
-                    <span className="font-semibold text-slate-900 dark:text-slate-100">
-                      {m.subjects?.name_tr ?? "Ders"}
-                    </span>
-                    {m.topics?.name_tr && (
-                      <span className="text-slate-400 block text-[11px]">{m.topics.name_tr}</span>
-                    )}
-                  </td>
-                  <td className="py-3 px-4 font-medium">{REASON_LABELS[m.reason] ?? m.reason}</td>
-                  <td className="py-3 px-4 text-slate-600 dark:text-slate-400 max-w-xs truncate">
-                    {m.note ?? "—"}
-                  </td>
-                  <td className="py-3 px-4 text-right">
-                    {m.status === "open" ? (
-                      <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold text-[11px]">
-                        İncelenmedi
+              {mistakes.map((m: any) => {
+                const reasonMeta = REASON_LABELS[m.reason] || {
+                  label: m.reason,
+                  color: "bg-slate-50 text-slate-700 border-slate-200",
+                };
+
+                return (
+                  <tr key={m.id} className="hover:bg-slate-50/50 dark:hover:bg-slate-800/40">
+                    <td className="py-3 px-4 text-slate-500">
+                      {formatIstanbulLongDate(m.created_at)}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className="font-semibold text-slate-900 dark:text-slate-100">
+                        {m.subjects?.name_tr ?? "Ders"}
                       </span>
-                    ) : m.status === "reviewed" ? (
-                      <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold text-[11px]">
-                        İncelendi
+                      {m.topics?.name_tr && (
+                        <span className="text-slate-400 block text-[11px]">{m.topics.name_tr}</span>
+                      )}
+                    </td>
+                    <td className="py-3 px-4">
+                      <span className={`px-2 py-0.5 rounded-md text-[11px] font-semibold border ${reasonMeta.color}`}>
+                        {reasonMeta.label}
                       </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold text-[11px]">
-                        Çözüldü
-                      </span>
-                    )}
-                  </td>
-                </tr>
-              ))}
+                    </td>
+                    <td className="py-3 px-4 text-slate-600 dark:text-slate-400 max-w-xs truncate">
+                      {m.note ?? "—"}
+                    </td>
+                    <td className="py-3 px-4 text-right">
+                      {m.status === "open" ? (
+                        <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold text-[11px] border border-amber-200 dark:border-amber-800">
+                          İncelenmedi
+                        </span>
+                      ) : m.status === "reviewed" ? (
+                        <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold text-[11px] border border-indigo-200 dark:border-indigo-800">
+                          İncelendi
+                        </span>
+                      ) : (
+                        <span className="px-2 py-0.5 rounded-md bg-emerald-50 dark:bg-emerald-950/40 text-emerald-700 dark:text-emerald-300 font-semibold text-[11px] border border-emerald-200 dark:border-emerald-800">
+                          Çözüldü
+                        </span>
+                      )}
+                    </td>
+                  </tr>
+                );
+              })}
 
               {mistakes.length === 0 && (
                 <tr>

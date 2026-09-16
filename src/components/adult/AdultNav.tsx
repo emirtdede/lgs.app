@@ -197,6 +197,7 @@ export function AdultNav({ familyName = "Aile", role = "viewer" }: AdultNavProps
                   <Link
                     key={item.href}
                     href={item.href}
+                    prefetch={true}
                     aria-current={isActive ? "page" : undefined}
                     className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors ${
                       isActive
@@ -214,6 +215,7 @@ export function AdultNav({ familyName = "Aile", role = "viewer" }: AdultNavProps
           <div className="flex items-center gap-3 text-xs">
             <Link
               href="/today"
+              prefetch={true}
               className="text-slate-500 hover:text-slate-800 dark:hover:text-slate-200"
             >
               Öğrenci Görünümüne Geç →
@@ -224,27 +226,32 @@ export function AdultNav({ familyName = "Aile", role = "viewer" }: AdultNavProps
 
       {/* Mobile Bottom Navigation Bar */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-1 py-1.5 overflow-x-auto flex items-center justify-around"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-0.5 py-1 pb-[env(safe-area-inset-bottom)]"
         aria-label="Mobile Adult Navigation"
       >
-        {navItems.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActive ? "page" : undefined}
-              className={`flex flex-col items-center justify-center min-w-[48px] min-h-[44px] px-1.5 rounded-xl transition-all ${
-                isActive
-                  ? "text-blue-600 dark:text-blue-400 font-bold"
-                  : "text-slate-500 dark:text-slate-400 hover:text-slate-800"
-              }`}
-            >
-              {item.icon(isActive)}
-              <span className="text-[10px] mt-0.5 whitespace-nowrap">{item.label}</span>
-            </Link>
-          );
-        })}
+        <div className="grid grid-cols-7 items-center w-full">
+          {navItems.map((item) => {
+            const isActive = pathname === item.href;
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                prefetch={true}
+                aria-current={isActive ? "page" : undefined}
+                className={`flex flex-col items-center justify-center w-full min-h-[44px] py-1 px-0.5 rounded-xl transition-all ${
+                  isActive
+                    ? "text-blue-600 dark:text-blue-400 font-bold"
+                    : "text-slate-500 dark:text-slate-400 hover:text-slate-800"
+                }`}
+              >
+                {item.icon(isActive)}
+                <span className="text-[9px] sm:text-[10px] tracking-tight truncate w-full text-center leading-none mt-0.5">
+                  {item.label}
+                </span>
+              </Link>
+            );
+          })}
+        </div>
       </nav>
     </>
   );
