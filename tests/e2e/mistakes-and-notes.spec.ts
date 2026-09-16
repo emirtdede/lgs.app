@@ -36,6 +36,13 @@ test.describe("Mistakes Pool and Study Notes E2E", () => {
     // Verify it appears in the grouped topic view
     await expect(page.getByText(/Çarpanlar ve Katlar/i).first()).toBeVisible();
     await expect(page.getByText(/En küçük ortak katı hesaplarken işlem hatası/i)).toBeVisible();
+
+    // Clean up created test mistake so database is left clean
+    page.once("dialog", (dialog) => dialog.accept());
+    const deleteBtn = page.getByRole("button", { name: "Sil" }).first();
+    if (await deleteBtn.isVisible()) {
+      await deleteBtn.click();
+    }
   });
 
   test("verifies study notes page, creating a note and toggling completed status", async ({
