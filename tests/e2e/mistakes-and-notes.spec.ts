@@ -5,7 +5,7 @@ test.describe("Mistakes Pool and Study Notes E2E", () => {
     await page.goto("/mistakes");
 
     // Heading
-    await expect(page.getByRole("heading", { name: /Yanlışlar Havuzu/i })).toBeVisible();
+    await expect(page.getByRole("heading", { name: /Yanlış (Sorular|Havuzu)/i })).toBeVisible();
 
     // Subject tabs exist: Tüm Dersler, Matematik, Türkçe, Fen Bilimleri...
     await expect(page.getByText("Tüm Dersler")).toBeVisible();

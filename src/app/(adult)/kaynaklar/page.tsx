@@ -9,7 +9,6 @@ import {
   FileCheck,
   PlayCircle,
   ExternalLink,
-  CheckCircle2,
   Tv,
 } from "lucide-react";
 import { createServerSupabaseClient } from "@/lib/supabase/server";
@@ -173,26 +172,6 @@ const MASTER_APPROVED_RESOURCES: ApprovedResource[] = [
   },
 ];
 
-import { unstable_cache } from "next/cache";
-
-const getCachedResourceItemCount = unstable_cache(
-  async () => {
-    try {
-      const supabase = env.SUPABASE_SERVICE_ROLE_KEY
-        ? createAdminClient()
-        : await createServerSupabaseClient();
-      const { count } = await supabase
-        .from("resource_items")
-        .select("id", { count: "exact", head: true });
-      return count || 418;
-    } catch {
-      return 418;
-    }
-  },
-  ["resource-items-count"],
-  { revalidate: 86400, tags: ["resources"] }
-);
-
 export default async function AdultResourcesPage() {
   const supabase = env.SUPABASE_SERVICE_ROLE_KEY
     ? createAdminClient()
@@ -203,8 +182,6 @@ export default async function AdultResourcesPage() {
     return null;
   }
 
-  const totalItemsCount = await getCachedResourceItemCount();
-
   return (
     <div className="max-w-6xl mx-auto px-4 py-6">
       {/* Top Header */}
@@ -212,41 +189,15 @@ export default async function AdultResourcesPage() {
         <div>
           <div className="flex items-center gap-2">
             <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-              Onaylı Kaynak Envanteri
+              Ders Kaynakları
             </h1>
             <span className="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-950/60 text-blue-700 dark:text-blue-300 border border-blue-200 dark:border-blue-900 shrink-0">
-              9 Kaynak Seti
+              9 Kaynak
             </span>
           </div>
           <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-            LGS 2027 çalışma planındaki 418 ders videosu ve MEB soru fasiküllerinin resmi listesi.
+            LGS 2027 çalışma planındaki ders konu anlatım videoları ve MEB soru fasikülleri.
           </p>
-        </div>
-      </div>
-
-      {/* Verification Status Banner */}
-      <div className="p-4 rounded-2xl bg-gradient-to-r from-emerald-50 via-teal-50 to-emerald-50 dark:from-emerald-950/30 dark:via-teal-950/20 dark:to-emerald-950/30 border border-emerald-200 dark:border-emerald-800/80 mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-emerald-600 text-white flex items-center justify-center shrink-0 shadow-xs">
-            <CheckCircle2 className="w-5 h-5" />
-          </div>
-          <div>
-            <h2 className="text-sm font-bold text-emerald-950 dark:text-emerald-100">
-              Müfredat ve Ders Kaynakları Eksiksiz Doğrulandı
-            </h2>
-            <p className="text-xs text-emerald-700 dark:text-emerald-300 mt-0.5">
-              Tüm derslerin (Matematik, Türkçe, Fen, İnkılap, Din, İngilizce) oynatma listeleri plandaki görevlerle 1-e-1 eşleştirilmiştir.
-            </p>
-          </div>
-        </div>
-
-        <div className="flex items-center gap-2 text-xs font-semibold shrink-0">
-          <span className="px-3 py-1.5 rounded-xl bg-white dark:bg-slate-900 border border-emerald-200 dark:border-emerald-800 text-emerald-800 dark:text-emerald-300 shadow-2xs">
-            {totalItemsCount} Ders İçeriği
-          </span>
-          <span className="px-3 py-1.5 rounded-xl bg-emerald-600 text-white shadow-2xs">
-            %100 Tam Eşleşme
-          </span>
         </div>
       </div>
 

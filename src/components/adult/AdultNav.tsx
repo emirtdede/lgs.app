@@ -226,7 +226,7 @@ export function AdultNav({ familyName = "Aile", role = "viewer" }: AdultNavProps
 
       {/* Mobile Bottom Navigation Bar */}
       <nav
-        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-0.5 py-1 pb-[env(safe-area-inset-bottom)]"
+        className="md:hidden fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md border-t border-slate-200 dark:border-slate-800 px-0.5 pt-1.5 pb-[max(0.6rem,env(safe-area-inset-bottom))]"
         aria-label="Mobile Adult Navigation"
       >
         <div className="grid grid-cols-7 items-center w-full">

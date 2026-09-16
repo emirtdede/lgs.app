@@ -155,7 +155,7 @@ export function MistakesClientView({
 
   // Delete mistake handler
   const handleDeleteMistake = (mistakeId: string) => {
-    if (!window.confirm("Bu yanlış soru kaydını havuzdan silmek istediğinize emin misiniz?")) {
+    if (!window.confirm("Bu yanlış soru kaydını silmek istediğinize emin misiniz?")) {
       return;
     }
     setErrorMsg(null);
@@ -211,7 +211,7 @@ export function MistakesClientView({
         setNewCorrectSolution("");
         setNewImageData(null);
         setImageSizeKb(null);
-        setSuccessMsg("Yanlış soru başarıyla havuza eklendi!");
+        setSuccessMsg("Yanlış soru başarıyla eklendi!");
         setTimeout(() => setSuccessMsg(null), 3000);
       } else {
         setErrorMsg(res.errorMessage ?? "Yanlış soru kaydedilemedi.");
@@ -264,7 +264,7 @@ export function MistakesClientView({
       <div className="flex items-center justify-between gap-2 mb-4">
         <div className="flex items-center gap-2 min-w-0 flex-1">
           <h1 className="text-base sm:text-xl font-bold tracking-tight text-slate-900 dark:text-slate-100 truncate whitespace-nowrap">
-            Yanlışlar Havuzu
+            Yanlış Sorular
           </h1>
           {mistakes.length > 0 && (
             <span className="px-2 py-0.5 rounded-full text-[11px] font-semibold bg-blue-100 text-blue-700 dark:bg-blue-950 dark:text-blue-300 shrink-0">

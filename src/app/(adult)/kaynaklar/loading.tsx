@@ -9,9 +9,6 @@ export default function KaynaklarLoading() {
         <div className="h-4 w-96 bg-slate-100 dark:bg-slate-800/60 rounded" />
       </div>
 
-      {/* Verification banner skeleton */}
-      <div className="mb-6 h-20 rounded-2xl bg-emerald-50/50 dark:bg-emerald-950/20 border border-emerald-200/50 dark:border-emerald-800/50" />
-
       {/* Resources grid skeleton (9 cards) */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((k) => (

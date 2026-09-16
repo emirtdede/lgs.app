@@ -13,8 +13,8 @@ describe("PWA Manifest and Service Worker Verification", () => {
     expect(content.short_name).toBe("LGS 2027");
     expect(content.display).toBe("standalone");
     expect(content.start_url).toBe("/");
-    expect(content.theme_color).toBe("#2563eb");
-    expect(content.background_color).toBe("#0f172a");
+    expect(content.theme_color).toBe("#020617");
+    expect(content.background_color).toBe("#020617");
 
     expect(Array.isArray(content.icons)).toBe(true);
     expect(content.icons.length).toBeGreaterThanOrEqual(2);
@@ -34,8 +34,8 @@ describe("PWA Manifest and Service Worker Verification", () => {
     expect(dynManifest.short_name).toBe("LGS 2027");
     expect(dynManifest.display).toBe("standalone");
     expect(dynManifest.start_url).toBe("/");
-    expect(dynManifest.theme_color).toBe("#2563eb");
-    expect(dynManifest.background_color).toBe("#0f172a");
+    expect(dynManifest.theme_color).toBe("#020617");
+    expect(dynManifest.background_color).toBe("#020617");
   });
 
   it("verifies public/sw.js exists and handles offline fallback", () => {

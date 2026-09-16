@@ -77,72 +77,80 @@ export default async function AdminMistakesPage() {
     <div className="max-w-6xl mx-auto px-4 py-6">
       <div className="mb-6">
         <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-slate-900 dark:text-slate-100">
-          Yanlış Soru Analiz Havuzu
+          Yanlış Soru Takibi
         </h1>
         <p className="text-xs sm:text-sm text-slate-500 dark:text-slate-400 mt-0.5">
-          Öğrencinin çözdüğü sorularda karşılaşılan yanlış nedenleri, hata kategorileri ve tekrar çözüm süreci.
+          Öğrencinin çözdüğü sorularda karşılaşılan yanlışlar ve tekrar çözüm durumları.
         </p>
       </div>
 
       {/* KPI Cards */}
-      <div className="grid grid-cols-3 gap-3 mb-6">
-        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs font-medium text-slate-500 block mb-1">İncelenmedi (Açık)</span>
-            <span className="text-2xl font-bold text-amber-600 dark:text-amber-400">{openCount}</span>
+      <div className="grid grid-cols-3 gap-2.5 sm:gap-4 mb-6">
+        <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 truncate">Bekleyen</span>
+            <div className="w-7 h-7 rounded-lg bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
+              <AlertCircle className="w-4 h-4" />
+            </div>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-amber-50 dark:bg-amber-950/50 text-amber-600 dark:text-amber-400 flex items-center justify-center shrink-0">
-            <AlertCircle className="w-4 h-4" />
-          </div>
+          <span className="text-2xl sm:text-3xl font-bold text-amber-600 dark:text-amber-400">
+            {openCount}
+          </span>
         </div>
 
-        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs font-medium text-slate-500 block mb-1">İncelendi</span>
-            <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">
-              {reviewedCount}
-            </span>
+        <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 truncate">İncelendi</span>
+            <div className="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
+              <Eye className="w-4 h-4" />
+            </div>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-indigo-50 dark:bg-indigo-950/50 text-indigo-600 dark:text-indigo-400 flex items-center justify-center shrink-0">
-            <Eye className="w-4 h-4" />
-          </div>
+          <span className="text-2xl sm:text-3xl font-bold text-indigo-600 dark:text-indigo-400">
+            {reviewedCount}
+          </span>
         </div>
 
-        <div className="p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex items-center justify-between">
-          <div>
-            <span className="text-xs font-medium text-slate-500 block mb-1">Çözüldü</span>
-            <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">
-              {resolvedCount}
-            </span>
+        <div className="p-3 sm:p-4 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs flex flex-col justify-between">
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-xs font-semibold text-slate-500 truncate">Çözüldü</span>
+            <div className="w-7 h-7 rounded-lg bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
+              <CheckCircle2 className="w-4 h-4" />
+            </div>
           </div>
-          <div className="w-8 h-8 rounded-xl bg-emerald-50 dark:bg-emerald-950/50 text-emerald-600 dark:text-emerald-400 flex items-center justify-center shrink-0">
-            <CheckCircle2 className="w-4 h-4" />
-          </div>
+          <span className="text-2xl sm:text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+            {resolvedCount}
+          </span>
         </div>
       </div>
 
       {/* Breakdown by Reason */}
-      <div className="mb-8 p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
-        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-4">
-          Yanlış Nedenleri Dağılımı
+      <div className="mb-8 p-4 sm:p-5 bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 rounded-2xl shadow-xs">
+        <h2 className="text-xs font-bold uppercase tracking-wider text-slate-500 mb-3">
+          Hata Nedenleri Dağılımı
         </h2>
 
-        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-2.5 sm:gap-3">
           {Object.entries(REASON_LABELS).map(([reasonKey, meta]) => {
             const data = countsByReason.get(reasonKey) || { total: 0, resolved: 0 };
             return (
               <div
                 key={reasonKey}
-                className="p-3 bg-slate-50/80 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 text-center flex flex-col justify-between"
+                className="p-3 bg-slate-50/80 dark:bg-slate-800/40 rounded-xl border border-slate-100 dark:border-slate-800 text-center flex flex-col justify-between min-h-[96px]"
               >
-                <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 truncate">
+                <div className="text-[11px] font-semibold text-slate-600 dark:text-slate-400 leading-tight line-clamp-2 min-h-[2.2em] flex items-center justify-center text-center">
                   {meta.label}
                 </div>
                 <div className="text-xl font-bold text-slate-900 dark:text-slate-100 my-1">
                   {data.total}
                 </div>
-                <div className="text-[10px] text-emerald-600 dark:text-emerald-400 font-medium">
-                  {data.resolved} çözüldü
+                <div className="text-[10px] font-medium">
+                  {data.total > 0 ? (
+                    <span className="text-emerald-600 dark:text-emerald-400">
+                      {data.resolved} çözüldü
+                    </span>
+                  ) : (
+                    <span className="text-slate-400 dark:text-slate-500">—</span>
+                  )}
                 </div>
               </div>
             );
@@ -157,7 +165,7 @@ export default async function AdminMistakesPage() {
             Kayıtlı Yanlış Sorular ({mistakes.length})
           </h2>
           <span className="text-xs text-slate-400">
-            {openCount} açık soru çözülmeyi bekliyor
+            {openCount} soru tekrar çözülmeyi bekliyor
           </span>
         </div>
 
@@ -177,7 +185,7 @@ export default async function AdminMistakesPage() {
                   </span>
                   {m.status === "open" ? (
                     <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold text-[11px] border border-amber-200 dark:border-amber-800">
-                      İncelenmedi
+                      Bekliyor
                     </span>
                   ) : m.status === "reviewed" ? (
                     <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold text-[11px] border border-indigo-200 dark:border-indigo-800">
@@ -264,7 +272,7 @@ export default async function AdminMistakesPage() {
                     <td className="py-3 px-4 text-right">
                       {m.status === "open" ? (
                         <span className="px-2 py-0.5 rounded-md bg-amber-50 dark:bg-amber-950/40 text-amber-700 dark:text-amber-300 font-semibold text-[11px] border border-amber-200 dark:border-amber-800">
-                          İncelenmedi
+                          Bekliyor
                         </span>
                       ) : m.status === "reviewed" ? (
                         <span className="px-2 py-0.5 rounded-md bg-indigo-50 dark:bg-indigo-950/40 text-indigo-700 dark:text-indigo-300 font-semibold text-[11px] border border-indigo-200 dark:border-indigo-800">

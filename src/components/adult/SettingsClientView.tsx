@@ -158,7 +158,7 @@ export function SettingsClientView({
                     {student.displayName}
                   </span>
                   <span className="text-[11px] text-slate-500 dark:text-slate-400 block mt-0.5">
-                    Ders masası, 20 soruluk hız ölçümü, Yanlışlar Havuzu
+                    Ders masası, 20 soruluk hız ölçümü, Yanlış Soru Takibi
                   </span>
                 </div>
                 <span className="px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 dark:bg-emerald-950/60 text-emerald-700 dark:text-emerald-300">

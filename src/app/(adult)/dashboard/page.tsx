@@ -370,7 +370,7 @@ export default async function AdultDashboardPage() {
               href="/admin/yanlislar"
               className="inline-flex items-center gap-1 text-xs font-semibold text-blue-600 dark:text-blue-400 hover:underline"
             >
-              <span>Havuzu İncele</span>
+              <span>Yanlışları İncele</span>
               <ChevronRight className="w-3.5 h-3.5" />
             </Link>
           </div>
@@ -393,7 +393,7 @@ export default async function AdultDashboardPage() {
                     {reasonInfo.label}
                   </span>
                   <span className="text-slate-600 dark:text-slate-400 font-medium">
-                    {mb.count} soru ({mb.openCount} açık)
+                    {mb.count} soru ({mb.openCount} bekleyen)
                   </span>
                 </div>
               );

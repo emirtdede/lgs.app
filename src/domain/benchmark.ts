@@ -45,7 +45,7 @@ export function validateBenchmarkResult(input: BenchmarkResultInput): BenchmarkV
       isValid: false,
       totalEntered: total,
       remaining,
-      errorMessage: `Benchmark toplamı tam olarak 20 soru olmalıdır (Şu an: ${total}).`,
+      errorMessage: `Soru sayıları toplamı tam olarak 20 soru olmalıdır (Şu an: ${total}).`,
     };
   }
 
