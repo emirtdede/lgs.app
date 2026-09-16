@@ -193,15 +193,11 @@ export async function cancelBenchmarkAction(sessionId: string): Promise<ActionRe
     const { env } = await import("@/env");
     if (env.SUPABASE_SERVICE_ROLE_KEY && sessionId && !sessionId.startsWith("local-")) {
       const admin = createAdminClient();
+      // Remove aborted/cancelled session row completely to keep database clean
       await admin
         .from("timer_sessions")
-        .update({
-          status: "cancelled",
-          finished_at: new Date().toISOString(),
-          duration_seconds: 0,
-        })
-        .eq("id", sessionId)
-        .eq("status", "active");
+        .delete()
+        .eq("id", sessionId);
     }
   } catch {
     // Graceful fallback
