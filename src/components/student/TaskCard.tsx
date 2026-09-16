@@ -212,24 +212,24 @@ export function TaskCard({
           isTimerActiveForThis ? (
             <button
               onClick={() => onResumeBenchmark(task)}
-              className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-amber-500 focus:outline-none"
+              className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-amber-600 hover:bg-amber-700 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-amber-500 focus:outline-none whitespace-nowrap"
             >
-              <span className="inline-block w-2.5 h-2.5 rounded-full bg-white animate-ping" />
-              Zamanlayıcıyı Görüntüle
+              <span className="inline-block w-2.5 h-2.5 rounded-full bg-white animate-ping shrink-0" />
+              <span>Zamanlayıcıyı Görüntüle</span>
             </button>
           ) : isAnyTimerActive ? (
             <button
               disabled
-              className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed"
+              className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-medium bg-slate-100 dark:bg-slate-800 text-slate-400 cursor-not-allowed whitespace-nowrap"
             >
               Başka Zamanlayıcı Açık
             </button>
           ) : (
             <button
               onClick={() => onStartBenchmark(task)}
-              className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl text-sm font-bold text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none bg-blue-600 hover:bg-blue-700"
+              className="w-full sm:w-auto min-h-[44px] px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none bg-blue-600 hover:bg-blue-700 whitespace-nowrap cursor-pointer"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
@@ -243,7 +243,7 @@ export function TaskCard({
                   d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
                 />
               </svg>
-              İleri Sayımı Başlat (İlk 20 Soru)
+              <span>İleri Sayımı Başlat (20 Soru)</span>
             </button>
           )
         ) : isVideoTask ? (
@@ -251,9 +251,9 @@ export function TaskCard({
           <button
             type="button"
             onClick={() => onCompleteNonQuestion(task)}
-            className="w-full sm:w-auto min-h-[44px] px-5 py-2.5 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer"
+            className="w-full sm:w-auto min-h-[44px] px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none cursor-pointer whitespace-nowrap"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -261,23 +261,23 @@ export function TaskCard({
                 d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
               />
             </svg>
-            Videoyu İzledim Olarak İşaretle
+            <span>Videoyu İzledim</span>
           </button>
         ) : isQuestionTask ? (
           /* Untimed Question Task Actions */
           <button
             onClick={() => onOpenQuestionResult(task)}
-            className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold bg-blue-600 hover:bg-blue-700 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-blue-500 focus:outline-none whitespace-nowrap"
           >
-            Sonuç Gir ({task.plannedQuestionCount ?? 0} Soru)
+            <span>Sonuç Gir ({task.plannedQuestionCount ?? 0} Soru)</span>
           </button>
         ) : (
           /* Other Non-question Tasks (Review, Analysis, Sleep, Break) */
           <button
             onClick={() => onCompleteNonQuestion(task)}
-            className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-sm font-semibold bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-slate-500 focus:outline-none"
+            className="w-full sm:w-auto min-h-[44px] px-4 py-2.5 rounded-xl text-xs sm:text-sm font-semibold bg-slate-800 hover:bg-slate-900 dark:bg-slate-700 dark:hover:bg-slate-600 text-white shadow-sm flex items-center justify-center gap-2 transition-colors focus:ring-2 focus:ring-slate-500 focus:outline-none whitespace-nowrap"
           >
-            Tamamlandı Olarak İşaretle
+            <span>Tamamlandı Olarak İşaretle</span>
           </button>
         )}
       </div>
