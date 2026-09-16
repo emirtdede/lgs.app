@@ -41,12 +41,14 @@ export function TodayClientView({ student, initialData }: TodayClientViewProps) 
 
   // Active Timer Modal State
   const [activeTimer, setActiveTimer] = useState<{
-    sessionId: string;
-    startedAt: string;
+    taskId: string;
+    sessionId?: string | null;
+    startedAt?: string | null;
     taskTitle: string;
   } | null>(() => {
     if (initialData.activeTimerSession) {
       return {
+        taskId: initialData.activeTimerSession.taskId,
         sessionId: initialData.activeTimerSession.sessionId,
         startedAt: initialData.activeTimerSession.startedAt,
         taskTitle: initialData.activeTimerSession.taskTitle,
@@ -60,6 +62,7 @@ export function TodayClientView({ student, initialData }: TodayClientViewProps) 
     sessionId: string;
     durationSeconds: number;
     taskTitle: string;
+    taskId?: string;
   } | null>(null);
 
   // Non-benchmark Question Result Modal State
@@ -76,27 +79,34 @@ export function TodayClientView({ student, initialData }: TodayClientViewProps) 
     setTimeout(() => setFeedback(null), 4000);
   };
 
-  // 1. Start Benchmark
-  const handleStartBenchmark = async (task: StudentTodayTask) => {
-    const res = await startBenchmarkAction(task.id);
-    if (!res.success) {
-      showToast(res.errorMessage ?? "Zamanlayıcı başlatılamadı.");
-      return;
-    }
-
-    if (res.data) {
-      setActiveTimer({
-        sessionId: res.data.sessionId,
-        startedAt: res.data.startedAt,
-        taskTitle: task.title,
-      });
-    }
+  // 1. Open Benchmark modal (starts in 'idle' mode, doesn't auto-tick until student clicks 'Başlat')
+  const handleStartBenchmark = (task: StudentTodayTask) => {
+    setActiveTimer({
+      taskId: task.id,
+      sessionId: null,
+      startedAt: null,
+      taskTitle: task.title,
+    });
   };
 
-  // 2. Resume already active timer
+  // 2. Start server timer when student clicks 'Başlat' inside modal
+  const handleStartServerTimer = async (taskId: string) => {
+    const res = await startBenchmarkAction(taskId);
+    if (!res.success || !res.data) {
+      showToast(res.errorMessage ?? "Zamanlayıcı başlatılamadı.");
+      return null;
+    }
+    return {
+      sessionId: res.data.sessionId,
+      startedAt: res.data.startedAt,
+    };
+  };
+
+  // 3. Resume already active timer
   const handleResumeBenchmark = (task: StudentTodayTask) => {
     if (data.activeTimerSession) {
       setActiveTimer({
+        taskId: data.activeTimerSession.taskId,
         sessionId: data.activeTimerSession.sessionId,
         startedAt: data.activeTimerSession.startedAt,
         taskTitle: data.activeTimerSession.taskTitle,
@@ -104,26 +114,30 @@ export function TodayClientView({ student, initialData }: TodayClientViewProps) 
     }
   };
 
-  // 3. Finish Benchmark Timer -> opens result form
+  // 4. Finish Benchmark Timer -> opens result form
   const handleFinishTimer = (sessionId: string, elapsedSeconds: number) => {
     const title = activeTimer?.taskTitle ?? "20 Soru Hız ve Doğruluk Ölçümü";
+    const currentTaskId = activeTimer?.taskId;
     setActiveTimer(null);
     setBenchmarkResultTarget({
       sessionId,
       durationSeconds: elapsedSeconds,
       taskTitle: title,
+      taskId: currentTaskId,
     });
   };
 
-  // 4. Cancel Benchmark Timer
+  // 5. Cancel Benchmark Timer
   const handleCancelTimer = async (sessionId: string) => {
-    await cancelBenchmarkAction(sessionId);
+    if (sessionId && !sessionId.startsWith("local-") && !sessionId.startsWith("manual-")) {
+      await cancelBenchmarkAction(sessionId);
+    }
     setActiveTimer(null);
     showToast("Ölçüm iptal edildi.");
     router.refresh();
   };
 
-  // 5. Submit Benchmark 20 Result
+  // 6. Submit Benchmark 20 Result
   const handleSubmitBenchmarkResult = async (correct: number, wrong: number, blank: number) => {
     if (!benchmarkResultTarget) return;
 
@@ -131,7 +145,9 @@ export function TodayClientView({ student, initialData }: TodayClientViewProps) 
       benchmarkResultTarget.sessionId,
       correct,
       wrong,
-      blank
+      blank,
+      benchmarkResultTarget.durationSeconds,
+      benchmarkResultTarget.taskId
     );
 
     if (!res.success) {
@@ -479,9 +495,11 @@ export function TodayClientView({ student, initialData }: TodayClientViewProps) 
       {/* Modals */}
       {activeTimer && (
         <BenchmarkTimer
+          taskId={activeTimer.taskId}
           sessionId={activeTimer.sessionId}
           startedAt={activeTimer.startedAt}
           taskTitle={activeTimer.taskTitle}
+          onStartServerTimer={handleStartServerTimer}
           onFinish={handleFinishTimer}
           onCancel={handleCancelTimer}
           onClose={() => setActiveTimer(null)}

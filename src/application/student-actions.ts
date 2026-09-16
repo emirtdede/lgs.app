@@ -218,7 +218,9 @@ export async function finishBenchmark20Action(
   sessionId: string,
   correct: number,
   wrong: number,
-  blank: number
+  blank: number,
+  customDurationSeconds?: number,
+  taskIdParam?: string
 ): Promise<
   ActionResponse<{
     resultStatus: string;
@@ -237,28 +239,59 @@ export async function finishBenchmark20Action(
       };
     }
 
-    const supabase = await createServerSupabaseClient();
-    const { data, error } = await supabase.rpc("finish_benchmark_20", {
-      p_session_id: sessionId,
-      p_correct: correct,
-      p_wrong: wrong,
-      p_blank: blank,
-    });
+    const isManualSession = !sessionId || sessionId.startsWith("manual") || sessionId.startsWith("local-");
 
-    if (!error && data?.[0]) {
-      const res = data[0];
-      revalidatePath("/today");
-      return {
-        success: true,
-        data: {
-          resultStatus: res.result_status,
-          questionSessionId: res.question_session_id,
-          durationSeconds: res.duration_seconds,
-        },
-      };
+    // Only invoke DB RPC if this was a valid UUID server session
+    if (!isManualSession) {
+      const supabase = await createServerSupabaseClient();
+      const { data, error } = await supabase.rpc("finish_benchmark_20", {
+        p_session_id: sessionId,
+        p_correct: correct,
+        p_wrong: wrong,
+        p_blank: blank,
+      });
+
+      if (!error && data?.[0]) {
+        const res = data[0];
+        let finalDuration = res.duration_seconds;
+
+        // If a custom or paused duration was submitted and differs, update question_sessions and timer_sessions
+        if (customDurationSeconds !== undefined && customDurationSeconds > 0) {
+          finalDuration = customDurationSeconds;
+          try {
+            const { createAdminClient } = await import("@/lib/supabase/admin");
+            const { env } = await import("@/env");
+            if (env.SUPABASE_SERVICE_ROLE_KEY) {
+              const admin = createAdminClient();
+              if (res.question_session_id) {
+                await admin
+                  .from("question_sessions")
+                  .update({ duration_seconds: finalDuration })
+                  .eq("id", res.question_session_id);
+              }
+              await admin
+                .from("timer_sessions")
+                .update({ duration_seconds: finalDuration })
+                .eq("id", sessionId);
+            }
+          } catch {
+            // non-fatal
+          }
+        }
+
+        revalidatePath("/today");
+        return {
+          success: true,
+          data: {
+            resultStatus: res.result_status,
+            questionSessionId: res.question_session_id,
+            durationSeconds: finalDuration,
+          },
+        };
+      }
     }
 
-    // Direct access mode fallback with Supabase persistence
+    // Direct access mode fallback with Supabase persistence (and manual entry handler)
     const { createAdminClient } = await import("@/lib/supabase/admin");
     const { env } = await import("@/env");
     const { getCurrentStudent } = await import("@/server/student-service");
@@ -267,7 +300,7 @@ export async function finishBenchmark20Action(
       const student = await getCurrentStudent(admin);
 
       let timerSession: any = null;
-      if (sessionId && !sessionId.startsWith("local-")) {
+      if (sessionId && !isManualSession) {
         const { data: ts } = await admin
           .from("timer_sessions")
           .select("*")
@@ -277,10 +310,14 @@ export async function finishBenchmark20Action(
       }
 
       const now = new Date();
-      const startedAt = timerSession?.started_at
-        ? new Date(timerSession.started_at)
-        : new Date(now.getTime() - 1200 * 1000);
-      const durationSeconds = Math.max(1, Math.floor((now.getTime() - startedAt.getTime()) / 1000));
+      let durationSeconds = customDurationSeconds;
+      if (durationSeconds === undefined || durationSeconds <= 0) {
+        const startedAtTime = timerSession?.started_at
+          ? new Date(timerSession.started_at)
+          : new Date(now.getTime() - 1200 * 1000);
+        durationSeconds = Math.max(1, Math.floor((now.getTime() - startedAtTime.getTime()) / 1000));
+      }
+      const startedAt = new Date(now.getTime() - durationSeconds * 1000);
 
       let timerSessionId = timerSession?.id;
       if (!timerSessionId) {
@@ -307,7 +344,10 @@ export async function finishBenchmark20Action(
           .eq("id", timerSessionId);
       }
 
-      let taskId = timerSession?.task_id ?? null;
+      let taskId =
+        timerSession?.task_id ??
+        taskIdParam ??
+        (sessionId.startsWith("manual-") ? sessionId.replace("manual-", "") : null);
       let planDate = new Date().toISOString().slice(0, 10);
       let routine = "paragraph";
 

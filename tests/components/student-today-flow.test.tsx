@@ -173,4 +173,102 @@ describe("Student Today Components & Flow", () => {
     });
     expect(onStart).toHaveBeenCalled();
   });
+
+  it("starts BenchmarkTimer in idle state without auto-ticking and starts when clicked", async () => {
+    const onStartServer = vi.fn().mockResolvedValue({ sessionId: "sess-new", startedAt: new Date().toISOString() });
+    const onFinish = vi.fn();
+
+    render(
+      <BenchmarkTimer
+        taskId="task-1"
+        taskTitle="20 Soru Paragraf Rutini"
+        onStartServerTimer={onStartServer}
+        onFinish={onFinish}
+        onCancel={vi.fn()}
+        onClose={vi.fn()}
+      />
+    );
+
+    // Initial idle state
+    expect(screen.getByText("Başlamaya Hazır")).toBeDefined();
+    expect(screen.getByText("00:00:00")).toBeDefined();
+
+    const startBtn = screen.getByRole("button", { name: /Zamanlayıcıyı Başlat/i });
+    expect(startBtn).toBeDefined();
+
+    await act(async () => {
+      fireEvent.click(startBtn);
+    });
+
+    expect(onStartServer).toHaveBeenCalledWith("task-1");
+    expect(screen.getByText("İleri Sayım")).toBeDefined();
+    expect(screen.getByRole("button", { name: /Duraklat/i })).toBeDefined();
+  });
+
+  it("allows pausing, resuming and resetting BenchmarkTimer", async () => {
+    const onCancel = vi.fn().mockResolvedValue(undefined);
+
+    render(
+      <BenchmarkTimer
+        sessionId="sess-running"
+        startedAt={new Date(Date.now() - 5000).toISOString()}
+        taskTitle="20 Soru Matematik"
+        onFinish={vi.fn()}
+        onCancel={onCancel}
+        onClose={vi.fn()}
+      />
+    );
+
+    // Running state has Pause button
+    const pauseBtn = screen.getByRole("button", { name: /Duraklat/i });
+    fireEvent.click(pauseBtn);
+
+    // Paused state badge and Devam Et button
+    expect(screen.getByText("Duraklatıldı")).toBeDefined();
+    const resumeBtn = screen.getByRole("button", { name: /Devam Et/i });
+    expect(resumeBtn).toBeDefined();
+
+    // Reset button resets to idle
+    const resetBtn = screen.getByRole("button", { name: /Sıfırla/i });
+    await act(async () => {
+      fireEvent.click(resetBtn);
+    });
+
+    expect(screen.getByText("Başlamaya Hazır")).toBeDefined();
+    expect(screen.getByText("00:00:00")).toBeDefined();
+  });
+
+  it("supports manual time entry tab and submits exact calculated duration", () => {
+    const onFinish = vi.fn();
+
+    render(
+      <BenchmarkTimer
+        taskId="task-manual-1"
+        taskTitle="20 Soru Paragraf Rutini"
+        onFinish={onFinish}
+        onCancel={vi.fn()}
+        onClose={vi.fn()}
+      />
+    );
+
+    // Switch to manual tab
+    const manualTabBtn = screen.getByRole("button", { name: /Süreyi Manuel Gir/i });
+    fireEvent.click(manualTabBtn);
+
+    expect(screen.getByLabelText("Dakika")).toBeDefined();
+    expect(screen.getByLabelText("Saniye")).toBeDefined();
+
+    // Set 25 min 30 sec (25 * 60 + 30 = 1530 sec)
+    const minInput = screen.getByLabelText("Dakika");
+    const secInput = screen.getByLabelText("Saniye");
+    fireEvent.change(minInput, { target: { value: "25" } });
+    fireEvent.change(secInput, { target: { value: "30" } });
+
+    expect(screen.getByText(/25 dk 30 sn/i)).toBeDefined();
+
+    const submitManualBtn = screen.getByRole("button", { name: /Testi Bitir ve Sonucu Gir/i });
+    fireEvent.click(submitManualBtn);
+
+    expect(onFinish).toHaveBeenCalledWith("manual-task-manual-1", 1530);
+  });
 });
